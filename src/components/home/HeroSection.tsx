@@ -6,7 +6,7 @@ export default function HeroSection() {
     <section className="relative h-screen min-h-[680px] overflow-hidden">
       {/* Imagen hero — Hospital Tatamá, pórtico de entrada */}
       <Image
-        src="/fotos/hero-hospital-tatama.jpg"
+        src="/fotos/hospital-tatama.jpg"
         alt="Hospital Tatamá — UnEspacio Arquitectos"
         fill
         sizes="100vw"

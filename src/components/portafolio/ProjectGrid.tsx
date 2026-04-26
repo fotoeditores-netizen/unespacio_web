@@ -1,22 +1,21 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 const categories = ['Todos', 'Educativa', 'Corporativa', 'Cultural', 'Salud', 'Comercial', 'Residencial']
 
 const projects = [
-  { id: 1, title: 'Colegio San Rafael', category: 'Educativa', area: '4.200 m²', year: '2024', size: 'large' },
-  { id: 2, title: 'Torre Empresarial Norte', category: 'Corporativa', area: '12.500 m²', year: '2024', size: 'normal' },
-  { id: 3, title: 'Biblioteca Municipal', category: 'Cultural', area: '2.800 m²', year: '2023', size: 'normal' },
-  { id: 4, title: 'Centro Médico Integral', category: 'Salud', area: '3.600 m²', year: '2023', size: 'normal' },
-  { id: 5, title: 'Plaza Comercial El Parque', category: 'Comercial', area: '8.900 m²', year: '2023', size: 'large' },
-  { id: 6, title: 'Residencias La Colina', category: 'Residencial', area: '1.200 m²', year: '2023', size: 'normal' },
-  { id: 7, title: 'Campus Universitario Sur', category: 'Educativa', area: '41.000 m²', year: '2024', size: 'wide' },
-  { id: 8, title: 'Oficinas Coworking Central', category: 'Corporativa', area: '900 m²', year: '2022', size: 'normal' },
-  { id: 9, title: 'Teatro Comunitario', category: 'Cultural', area: '1.800 m²', year: '2022', size: 'normal' },
-  { id: 10, title: 'Clínica Odontológica', category: 'Salud', area: '320 m²', year: '2022', size: 'normal' },
-  { id: 11, title: 'Restaurante & Lounge', category: 'Comercial', area: '650 m²', year: '2022', size: 'normal' },
-  { id: 12, title: 'Vivienda Unifamiliar Andes', category: 'Residencial', area: '480 m²', year: '2021', size: 'normal' },
+  { id: 1, title: 'Hospital Tatamá', category: 'Salud', area: '41.000 m²', year: '2023', size: 'large', image: '/fotos/hospital-tatama.jpg' },
+  { id: 2, title: 'CDI Pasacaballos', category: 'Educativa', area: '320 m²', year: '2022', size: 'normal', image: '/fotos/proyecto-cdi.jpg' },
+  { id: 3, title: 'Centro de Idiomas EAFIT', category: 'Corporativa', area: '4.800 m²', year: '2022', size: 'wide', image: '/fotos/proyecto-centro-idiomas.jpg' },
+  { id: 4, title: 'Facultad de Artes', category: 'Cultural', area: '3.200 m²', year: '2023', size: 'normal', image: '/fotos/proyecto-facultad-artes.jpg' },
+  { id: 5, title: 'Casa CEM', category: 'Residencial', area: '480 m²', year: '2024', size: 'large', image: '/fotos/casa-cem2.jpg' },
+  { id: 6, title: 'Casa CEL', category: 'Residencial', area: '320 m²', year: '2023', size: 'normal', image: '/fotos/proyecto-casa-cel.jpg' },
+  { id: 7, title: 'Casa CLE', category: 'Residencial', area: '650 m²', year: '2022', size: 'normal', image: '/fotos/servicio-residencial.jpg' },
+  { id: 8, title: 'Restaurante', category: 'Comercial', area: '280 m²', year: '2023', size: 'normal', image: '/fotos/servicio-comercial.jpg' },
+  { id: 9, title: 'Concurso Ambientes Educativos', category: 'Educativa', area: '2.400 m²', year: '2021', size: 'normal', image: '/fotos/quote-educativo.jpg' },
+  { id: 10, title: 'Concurso Colegio', category: 'Educativa', area: '1.800 m²', year: '2021', size: 'normal', image: '/fotos/concurso-colegio.jpg' },
 ]
 
 const categoryColors: Record<string, string> = {
@@ -67,29 +66,15 @@ export default function ProjectGrid() {
               minHeight: project.size === 'large' ? '480px' : '260px',
             }}
           >
-            {/* Placeholder background */}
-            <div className="absolute inset-0 bg-cream">
-              {/* Hatching pattern */}
-              <div
-                className="absolute inset-0 opacity-20"
-                style={{
-                  backgroundImage: `repeating-linear-gradient(
-                    -45deg,
-                    #787A68 0,
-                    #787A68 1px,
-                    transparent 0,
-                    transparent 50%
-                  )`,
-                  backgroundSize: '16px 16px',
-                }}
-              />
-              {/* Center icon */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg className="w-12 h-12 text-olive/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-            </div>
+            {/* Project image */}
+            <Image
+              src={project.image}
+              alt={`${project.title} — UnEspacio Arquitectos`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              quality={80}
+            />
 
             {/* Corner accents */}
             <div className="absolute top-4 left-4 w-8 h-8 border-t border-l border-olive/30" />
