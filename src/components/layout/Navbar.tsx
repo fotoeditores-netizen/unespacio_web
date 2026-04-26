@@ -55,21 +55,16 @@ export default function Navbar() {
                 priority
               />
             </div>
-            <div className="leading-none">
-              <p
-                className={`font-heading font-bold text-base tracking-wider uppercase transition-colors ${
-                  scrolled || !isHome ? 'text-dark-olive' : 'text-white'
+            <div className="relative h-8 w-36 flex-shrink-0">
+              <Image
+                src="/logo_unespacio.png"
+                alt="UnEspacio Arquitectos"
+                fill
+                className={`object-contain object-left transition-all duration-300 ${
+                  scrolled || !isHome ? '' : 'brightness-0 invert'
                 }`}
-              >
-                UnEspacio
-              </p>
-              <p
-                className={`font-sans text-xs tracking-widest uppercase transition-colors ${
-                  scrolled || !isHome ? 'text-olive' : 'text-cream'
-                }`}
-              >
-                Arquitectos
-              </p>
+                priority
+              />
             </div>
           </Link>
 

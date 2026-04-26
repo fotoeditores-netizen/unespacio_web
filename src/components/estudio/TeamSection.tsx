@@ -405,7 +405,7 @@ export default function TeamSection() {
       key: 'laura',
       photo: '/perfil1.png',
       name: 'Laura Maya Torres',
-      fullName: 'Arquitecto Laura Maya Torres',
+      fullName: 'Arquitecta Laura Maya Torres',
       born: '1990 · Medellín – Colombia',
       role: 'Co-fundadora · Dirección de Diseño',
     },
