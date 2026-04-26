@@ -9,6 +9,7 @@ export default function HeroSection() {
         src="/fotos/hero-hospital-tatama.jpg"
         alt="Hospital Tatamá — UnEspacio Arquitectos"
         fill
+        sizes="100vw"
         className="object-cover object-center"
         priority
         quality={90}

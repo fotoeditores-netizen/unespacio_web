@@ -8,6 +8,7 @@ export default function QuoteBanner() {
         src="/fotos/quote-educativo.jpg"
         alt="Arquitectura educativa — ambientes donde ocurre la vida"
         fill
+        sizes="100vw"
         className="object-cover object-center"
         quality={80}
       />

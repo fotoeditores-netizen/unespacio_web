@@ -9,6 +9,7 @@ export default function CTASection() {
         src="/fotos/proyecto-cdi.jpg"
         alt="CDI Pasacaballos — UnEspacio Arquitectos"
         fill
+        sizes="100vw"
         className="object-cover object-center"
         quality={80}
       />

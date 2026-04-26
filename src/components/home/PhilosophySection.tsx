@@ -59,6 +59,7 @@ export default function PhilosophySection() {
             src="/fotos/interior-casa-cem.jpg"
             alt="Interior Casa CEM — espacio donde ocurre la vida"
             fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover object-center"
             quality={85}
           />

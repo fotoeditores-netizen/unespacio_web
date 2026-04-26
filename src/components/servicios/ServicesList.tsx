@@ -119,6 +119,7 @@ export default function ServicesList() {
                   src={service.image.src}
                   alt={service.image.alt}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className={`object-cover ${service.image.position} transition-transform duration-700 hover:scale-105`}
                   quality={85}
                 />
