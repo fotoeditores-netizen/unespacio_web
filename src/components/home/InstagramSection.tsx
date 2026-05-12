@@ -1,66 +1,17 @@
-import Link from 'next/link'
+'use client'
 
-const INSTAGRAM_URL = 'https://www.instagram.com/unespacioarquitectos/reels/'
+import { useEffect } from 'react'
+import Script from 'next/script'
 
-const reels = [
-  {
-    id: 1,
-    label: 'Proceso de diseño',
-    caption: 'Del boceto al espacio construido',
-    category: 'Proceso',
-    span: 'col-span-1 row-span-2',
-    aspectClass: 'aspect-[9/16]',
-    accentBg: 'bg-olive',
-  },
-  {
-    id: 2,
-    label: 'Proyecto educativo',
-    caption: 'Aulas que inspiran',
-    category: 'Educativa',
-    span: 'col-span-1 row-span-1',
-    aspectClass: 'aspect-[4/3]',
-    accentBg: 'bg-dark-olive',
-  },
-  {
-    id: 3,
-    label: 'Espacio corporativo',
-    caption: 'Donde la empresa toma forma',
-    category: 'Corporativa',
-    span: 'col-span-1 row-span-1',
-    aspectClass: 'aspect-[4/3]',
-    accentBg: 'bg-olive/80',
-  },
-  {
-    id: 4,
-    label: 'Casa Ene',
-    caption: 'Vivienda · 391 m²',
-    category: 'Residencial',
-    span: 'col-span-2 row-span-1',
-    aspectClass: 'aspect-[16/7]',
-    accentBg: 'bg-dark-olive/90',
-  },
-  {
-    id: 5,
-    label: 'Detalle constructivo',
-    caption: 'La materialidad del espacio',
-    category: 'Detalle',
-    span: 'col-span-1 row-span-1',
-    aspectClass: 'aspect-square',
-    accentBg: 'bg-olive/70',
-  },
-]
-
-function PlayIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-7 h-7 text-white drop-shadow-lg"
-    >
-      <path d="M8 5.14v14l11-7-11-7z" />
-    </svg>
-  )
+// Tipo global para el script de Instagram
+declare global {
+  interface Window {
+    instgrm?: {
+      Embeds: {
+        process: () => void
+      }
+    }
+  }
 }
 
 function InstagramIcon({ className }: { className?: string }) {
@@ -72,15 +23,25 @@ function InstagramIcon({ className }: { className?: string }) {
 }
 
 export default function InstagramSection() {
+  // Re-inicializa los embeds cuando el componente monta en una SPA
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.instgrm) {
+      window.instgrm.Embeds.process()
+    }
+  }, [])
+
   return (
     <section className="section-padding bg-cream">
       <div className="container-custom">
-        {/* Header */}
+
+        {/* ── Encabezado ── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-2 mb-3">
               <InstagramIcon className="w-4 h-4 text-olive" />
-              <span className="font-sans text-xs tracking-widest uppercase text-olive">Instagram</span>
+              <span className="font-sans text-xs tracking-widest uppercase text-olive">
+                Instagram · @unespacioarquitectos
+              </span>
             </div>
             <h2 className="font-heading font-bold text-4xl md:text-5xl text-dark-olive leading-tight">
               El estudio,<br />
@@ -89,143 +50,189 @@ export default function InstagramSection() {
           </div>
           <div className="md:text-right max-w-xs">
             <p className="font-sans text-sm text-olive/80 leading-relaxed mb-4">
-              Procesos, obras en curso, detalles que cuentan historias. Síguenos en Instagram para ver cómo diseñamos los lugares donde ocurre la vida.
+              Procesos, obras en curso y detalles que cuentan historias.
+              Síguenos para ver cómo diseñamos los lugares donde ocurre la vida.
             </p>
-            <p className="font-heading font-semibold text-sm text-dark-olive tracking-wide">
-              @unespacioarquitectos
-            </p>
+            <a
+              href="https://www.instagram.com/unespacioarquitectos/reels/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-heading font-semibold text-sm text-dark-olive tracking-wide hover:text-olive transition-colors"
+            >
+              @unespacioarquitectos →
+            </a>
           </div>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-          {/* Card 1 — tall left */}
-          <Link
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative overflow-hidden row-span-2 bg-olive/20"
-            style={{ gridRow: 'span 2' }}
-          >
-            <div className="absolute inset-0 bg-olive/20 flex flex-col items-center justify-center">
-              {/* Placeholder texture */}
-              <div className="absolute inset-0 opacity-10"
-                style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, #787A68 0, #787A68 1px, transparent 0, transparent 50%)',
-                  backgroundSize: '10px 10px',
-                }}
-              />
-            </div>
-            <div className="relative aspect-[9/16] md:aspect-auto md:h-full min-h-[320px] flex flex-col justify-between p-5">
-              {/* Top badge */}
-              <div className="flex items-center justify-between">
-                <span className="font-sans text-xs tracking-widest uppercase text-cream/80 bg-dark-olive/60 px-2 py-1 backdrop-blur-sm">
-                  Proceso
-                </span>
-                <div className="w-8 h-8 bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <PlayIcon />
-                </div>
-              </div>
-              {/* Bottom text */}
-              <div>
-                <p className="font-heading font-bold text-lg text-white leading-snug mb-1">
-                  Del boceto al espacio construido
-                </p>
-                <p className="font-sans text-xs text-cream/70">Proceso de diseño</p>
-              </div>
-            </div>
-            <div className="absolute inset-0 bg-dark-olive/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <div className="w-14 h-14 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center">
-                <PlayIcon />
-              </div>
-            </div>
-          </Link>
+        {/* ══════════════════════════════════════════════════════════════════
+            REELS DE INSTAGRAM — EMBEDS NATIVOS OFICIALES
+            ══════════════════════════════════════════════════════════════════
 
-          {/* Card 2 — top right */}
-          <Link
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative overflow-hidden bg-dark-olive"
-          >
-            <div className="absolute inset-0 opacity-5"
+            CÓMO REEMPLAZAR CADA REEL POR TU VIDEO REAL:
+            ─────────────────────────────────────────────
+            1. Abre el Reel en Instagram desde tu celular o computador
+            2. Toca los 3 puntos (···) del Reel → selecciona "Insertar" (Embed)
+            3. Copia la URL del atributo: data-instgrm-permalink="..."
+            4. En este archivo busca el comentario del Reel a cambiar
+               (REEL 1, REEL 2 o REEL 3) y pega la URL en el lugar indicado
+
+            EJEMPLO de URL de Reel:
+            https://www.instagram.com/reel/ABC123XYZ/?utm_source=ig_embed
+
+            ══════════════════════════════════════════════════════════════════ */}
+
+        {/* Grid 3 columnas desktop · 1 columna móvil */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+
+          {/* ┌─────────────────────────────────────────────────────────────────┐
+              │  REEL 1 ─── PEGA AQUÍ LA URL DE TU PRIMER REEL               │
+              │                                                                │
+              │  Localiza la línea data-instgrm-permalink y reemplaza         │
+              │  ÚNICAMENTE la URL entera por la URL de tu Reel:              │
+              │                                                                │
+              │  data-instgrm-permalink=                                       │
+              │    "https://www.instagram.com/reel/ ◄ PON AQUÍ TU URL        │
+              └───────────────────────────────────────────────────────────── */}
+          <div className="flex justify-center w-full">
+            <blockquote
+              className="instagram-media w-full"
+              data-instgrm-captioned
+              data-instgrm-permalink="https://www.instagram.com/reel/REEL_ID_1/?utm_source=ig_embed&amp;utm_campaign=loading"
+              data-instgrm-version="14"
               style={{
-                backgroundImage: 'repeating-linear-gradient(-45deg, #EDE9DC 0, #EDE9DC 1px, transparent 0, transparent 50%)',
-                backgroundSize: '10px 10px',
+                background: '#FFF',
+                border: '0',
+                borderRadius: '3px',
+                boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
+                margin: '1px',
+                maxWidth: '540px',
+                minWidth: '326px',
+                padding: '0',
+                width: '100%',
               }}
-            />
-            <div className="relative aspect-[4/3] flex flex-col justify-between p-4">
-              <span className="font-sans text-xs tracking-widest uppercase text-cream/60">Educativa</span>
-              <div>
-                <p className="font-heading font-bold text-base text-white leading-snug mb-1">Aulas que inspiran</p>
-                <p className="font-sans text-xs text-cream/50">Proyecto educativo</p>
+            >
+              {/* Contenido visible mientras carga o si el Reel no está definido */}
+              <div style={{ padding: '16px' }}>
+                <a
+                  href="https://www.instagram.com/unespacioarquitectos/reels/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="flex flex-col items-center justify-center bg-olive/10" style={{ minHeight: '420px' }}>
+                    <InstagramIcon className="w-8 h-8 text-olive mb-3" />
+                    <p className="font-heading font-semibold text-sm text-dark-olive">Reel 1</p>
+                    <p className="font-sans text-xs text-olive/60 mt-1 text-center px-4 max-w-[200px]">
+                      Reemplaza REEL_ID_1 en el código con la URL de tu Reel
+                    </p>
+                  </div>
+                </a>
               </div>
-            </div>
-            <div className="absolute inset-0 bg-olive/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center">
-                <PlayIcon />
-              </div>
-            </div>
-          </Link>
+            </blockquote>
+          </div>
 
-          {/* Card 3 — mid right */}
-          <Link
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative overflow-hidden bg-olive"
-          >
-            <div className="relative aspect-[4/3] flex flex-col justify-between p-4">
-              <span className="font-sans text-xs tracking-widest uppercase text-cream/70">Corporativa</span>
-              <div>
-                <p className="font-heading font-bold text-base text-white leading-snug mb-1">Donde la empresa toma forma</p>
-                <p className="font-sans text-xs text-cream/60">Espacio corporativo</p>
-              </div>
-            </div>
-            <div className="absolute inset-0 bg-dark-olive/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center">
-                <PlayIcon />
-              </div>
-            </div>
-          </Link>
-
-          {/* Card 4 — bottom wide (hidden on mobile, shown on md+) */}
-          <Link
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative overflow-hidden bg-dark-olive/90 hidden md:block md:col-span-2"
-          >
-            <div className="absolute inset-0 opacity-5"
+          {/* ┌─────────────────────────────────────────────────────────────────┐
+              │  REEL 2 ─── PEGA AQUÍ LA URL DE TU SEGUNDO REEL              │
+              │                                                                │
+              │  Localiza la línea data-instgrm-permalink y reemplaza         │
+              │  ÚNICAMENTE la URL entera por la URL de tu Reel:              │
+              │                                                                │
+              │  data-instgrm-permalink=                                       │
+              │    "https://www.instagram.com/reel/ ◄ PON AQUÍ TU URL        │
+              └───────────────────────────────────────────────────────────── */}
+          <div className="flex justify-center w-full">
+            <blockquote
+              className="instagram-media w-full"
+              data-instgrm-captioned
+              data-instgrm-permalink="https://www.instagram.com/reel/REEL_ID_2/?utm_source=ig_embed&amp;utm_campaign=loading"
+              data-instgrm-version="14"
               style={{
-                backgroundImage: 'repeating-linear-gradient(0deg, #EDE9DC 0, #EDE9DC 1px, transparent 0, transparent 50%)',
-                backgroundSize: '20px 20px',
+                background: '#FFF',
+                border: '0',
+                borderRadius: '3px',
+                boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
+                margin: '1px',
+                maxWidth: '540px',
+                minWidth: '326px',
+                padding: '0',
+                width: '100%',
               }}
-            />
-            <div className="relative aspect-[16/7] flex items-end justify-between p-6">
-              <div>
-                <span className="font-sans text-xs tracking-widest uppercase text-cream/60 block mb-2">Residencial</span>
-                <p className="font-heading font-bold text-2xl text-white leading-snug">Casa Ene · 391 m²</p>
+            >
+              <div style={{ padding: '16px' }}>
+                <a
+                  href="https://www.instagram.com/unespacioarquitectos/reels/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="flex flex-col items-center justify-center bg-dark-olive/10" style={{ minHeight: '420px' }}>
+                    <InstagramIcon className="w-8 h-8 text-olive mb-3" />
+                    <p className="font-heading font-semibold text-sm text-dark-olive">Reel 2</p>
+                    <p className="font-sans text-xs text-olive/60 mt-1 text-center px-4 max-w-[200px]">
+                      Reemplaza REEL_ID_2 en el código con la URL de tu Reel
+                    </p>
+                  </div>
+                </a>
               </div>
-              <p className="font-sans text-xs text-cream/40 text-right max-w-[180px] leading-relaxed">
-                Vivienda unifamiliar.<br />La arquitectura como diálogo.
-              </p>
-            </div>
-            <div className="absolute inset-0 bg-olive/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <div className="w-14 h-14 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center">
-                <PlayIcon />
+            </blockquote>
+          </div>
+
+          {/* ┌─────────────────────────────────────────────────────────────────┐
+              │  REEL 3 ─── PEGA AQUÍ LA URL DE TU TERCER REEL               │
+              │                                                                │
+              │  Localiza la línea data-instgrm-permalink y reemplaza         │
+              │  ÚNICAMENTE la URL entera por la URL de tu Reel:              │
+              │                                                                │
+              │  data-instgrm-permalink=                                       │
+              │    "https://www.instagram.com/reel/ ◄ PON AQUÍ TU URL        │
+              └───────────────────────────────────────────────────────────── */}
+          <div className="flex justify-center w-full">
+            <blockquote
+              className="instagram-media w-full"
+              data-instgrm-captioned
+              data-instgrm-permalink="https://www.instagram.com/reel/REEL_ID_3/?utm_source=ig_embed&amp;utm_campaign=loading"
+              data-instgrm-version="14"
+              style={{
+                background: '#FFF',
+                border: '0',
+                borderRadius: '3px',
+                boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
+                margin: '1px',
+                maxWidth: '540px',
+                minWidth: '326px',
+                padding: '0',
+                width: '100%',
+              }}
+            >
+              <div style={{ padding: '16px' }}>
+                <a
+                  href="https://www.instagram.com/unespacioarquitectos/reels/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="flex flex-col items-center justify-center bg-olive/10" style={{ minHeight: '420px' }}>
+                    <InstagramIcon className="w-8 h-8 text-olive mb-3" />
+                    <p className="font-heading font-semibold text-sm text-dark-olive">Reel 3</p>
+                    <p className="font-sans text-xs text-olive/60 mt-1 text-center px-4 max-w-[200px]">
+                      Reemplaza REEL_ID_3 en el código con la URL de tu Reel
+                    </p>
+                  </div>
+                </a>
               </div>
-            </div>
-          </Link>
+            </blockquote>
+          </div>
+
         </div>
+        {/* ══ FIN GRID DE REELS ══════════════════════════════════════════════ */}
 
-        {/* CTA */}
+        {/* ── CTA ── */}
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-olive/20">
           <p className="font-sans text-sm text-olive/70 text-center sm:text-left">
-            Más de nuestros proyectos, procesos y reflexiones en Instagram.
+            Más proyectos, procesos y reflexiones en Instagram.
           </p>
-          <Link
-            href={INSTAGRAM_URL}
+          <a
+            href="https://www.instagram.com/unespacioarquitectos/reels/"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-3 font-heading font-semibold text-sm tracking-wide text-dark-olive uppercase hover:text-olive transition-colors"
@@ -233,9 +240,27 @@ export default function InstagramSection() {
             <InstagramIcon className="w-4 h-4" />
             Ver todos los reels
             <span className="block w-6 h-px bg-current transition-all duration-300 group-hover:w-10" />
-          </Link>
+          </a>
         </div>
+
       </div>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          SCRIPT OFICIAL DE INSTAGRAM — NO MOVER / NO ELIMINAR
+          ══════════════════════════════════════════════════════════════════════
+          Transforma los <blockquote> anteriores en reproductores reales de Reels.
+          Se carga de forma diferida (lazyOnload) para no afectar el rendimiento.
+          ══════════════════════════════════════════════════════════════════════ */}
+      <Script
+        src="https://www.instagram.com/embed.js"
+        strategy="lazyOnload"
+        onLoad={() => {
+          if (typeof window !== 'undefined' && window.instgrm) {
+            window.instgrm.Embeds.process()
+          }
+        }}
+      />
+
     </section>
   )
 }
