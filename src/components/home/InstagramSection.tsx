@@ -3,7 +3,6 @@
 import { useEffect } from 'react'
 import Script from 'next/script'
 
-// Tipo global para el script de Instagram
 declare global {
   interface Window {
     instgrm?: {
@@ -14,6 +13,36 @@ declare global {
   }
 }
 
+// ══════════════════════════════════════════════════════════════════════════════
+//  CONFIGURACIÓN DE REELS — EDITA ÚNICAMENTE ESTA SECCIÓN
+// ══════════════════════════════════════════════════════════════════════════════
+//
+//  Cómo obtener la URL de un Reel:
+//  1. Abre el Reel en Instagram
+//  2. Toca los 3 puntos (···) → "Insertar" (Embed)
+//  3. Copia la URL que aparece en: data-instgrm-permalink="..."
+//     Formato: https://www.instagram.com/reel/XXXXXXXXXXX/?utm_source=ig_embed
+//
+//  Pega cada URL en el campo "url" del Reel correspondiente.
+//  Deja url: '' para mostrar el placeholder hasta que tengas el enlace real.
+//
+// ══════════════════════════════════════════════════════════════════════════════
+const REELS: { url: string; label: string }[] = [
+  {
+    url: '', // ← PEGA AQUÍ la URL del PRIMER Reel
+    label: 'Reel 1',
+  },
+  {
+    url: '', // ← PEGA AQUÍ la URL del SEGUNDO Reel
+    label: 'Reel 2',
+  },
+  {
+    url: '', // ← PEGA AQUÍ la URL del TERCER Reel
+    label: 'Reel 3',
+  },
+]
+// ══════════════════════════════════════════════════════════════════════════════
+
 function InstagramIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -22,19 +51,83 @@ function InstagramIcon({ className }: { className?: string }) {
   )
 }
 
+/** Tarjeta placeholder — se muestra cuando url está vacía */
+function ReelPlaceholder({ index }: { index: number }) {
+  const bg = index === 1 ? 'bg-dark-olive/10' : 'bg-olive/10'
+  return (
+    <a
+      href="https://www.instagram.com/unespacioarquitectos/reels/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex flex-col items-center justify-center gap-3 border border-olive/20 hover:border-olive/50 transition-colors"
+      style={{ minHeight: '480px' }}
+    >
+      <InstagramIcon className="w-8 h-8 text-olive/40" />
+      <div className="text-center px-6">
+        <p className="font-heading font-semibold text-sm text-dark-olive/60">
+          @unespacioarquitectos
+        </p>
+        <p className="font-sans text-xs text-olive/50 mt-1">
+          Próximamente
+        </p>
+      </div>
+    </a>
+  )
+}
+
+/** Embed nativo de Instagram — se muestra cuando url tiene valor */
+function ReelEmbed({ url }: { url: string }) {
+  return (
+    <div className="flex justify-center w-full">
+      <blockquote
+        className="instagram-media w-full"
+        data-instgrm-captioned
+        data-instgrm-permalink={`${url}&utm_source=ig_embed&utm_campaign=loading`}
+        data-instgrm-version="14"
+        style={{
+          background: '#FFF',
+          border: '0',
+          borderRadius: '3px',
+          boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
+          margin: '1px',
+          maxWidth: '540px',
+          minWidth: '326px',
+          padding: '0',
+          width: '100%',
+        }}
+      >
+        <div style={{ padding: '16px' }}>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <div className="flex flex-col items-center justify-center bg-olive/10" style={{ minHeight: '420px' }}>
+              <InstagramIcon className="w-8 h-8 text-olive mb-2" />
+              <p className="font-sans text-xs text-olive/70">Ver en Instagram</p>
+            </div>
+          </a>
+        </div>
+      </blockquote>
+    </div>
+  )
+}
+
 export default function InstagramSection() {
-  // Re-inicializa los embeds cuando el componente monta en una SPA
+  const hasAnyReel = REELS.some((r) => r.url.trim() !== '')
+
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.instgrm) {
+    if (hasAnyReel && typeof window !== 'undefined' && window.instgrm) {
       window.instgrm.Embeds.process()
     }
-  }, [])
+  }, [hasAnyReel])
 
   return (
     <section className="section-padding bg-cream">
       <div className="container-custom">
 
-        {/* ── Encabezado ── */}
+        {/* Encabezado */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-2 mb-3">
@@ -64,169 +157,18 @@ export default function InstagramSection() {
           </div>
         </div>
 
-        {/* ══════════════════════════════════════════════════════════════════
-            REELS DE INSTAGRAM — EMBEDS NATIVOS OFICIALES
-            ══════════════════════════════════════════════════════════════════
-
-            CÓMO REEMPLAZAR CADA REEL POR TU VIDEO REAL:
-            ─────────────────────────────────────────────
-            1. Abre el Reel en Instagram desde tu celular o computador
-            2. Toca los 3 puntos (···) del Reel → selecciona "Insertar" (Embed)
-            3. Copia la URL del atributo: data-instgrm-permalink="..."
-            4. En este archivo busca el comentario del Reel a cambiar
-               (REEL 1, REEL 2 o REEL 3) y pega la URL en el lugar indicado
-
-            EJEMPLO de URL de Reel:
-            https://www.instagram.com/reel/ABC123XYZ/?utm_source=ig_embed
-
-            ══════════════════════════════════════════════════════════════════ */}
-
-        {/* Grid 3 columnas desktop · 1 columna móvil */}
+        {/* Grid 3 columnas */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-
-          {/* ┌─────────────────────────────────────────────────────────────────┐
-              │  REEL 1 ─── PEGA AQUÍ LA URL DE TU PRIMER REEL               │
-              │                                                                │
-              │  Localiza la línea data-instgrm-permalink y reemplaza         │
-              │  ÚNICAMENTE la URL entera por la URL de tu Reel:              │
-              │                                                                │
-              │  data-instgrm-permalink=                                       │
-              │    "https://www.instagram.com/reel/ ◄ PON AQUÍ TU URL        │
-              └───────────────────────────────────────────────────────────── */}
-          <div className="flex justify-center w-full">
-            <blockquote
-              className="instagram-media w-full"
-              data-instgrm-captioned
-              data-instgrm-permalink="https://www.instagram.com/reel/REEL_ID_1/?utm_source=ig_embed&amp;utm_campaign=loading"
-              data-instgrm-version="14"
-              style={{
-                background: '#FFF',
-                border: '0',
-                borderRadius: '3px',
-                boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
-                margin: '1px',
-                maxWidth: '540px',
-                minWidth: '326px',
-                padding: '0',
-                width: '100%',
-              }}
-            >
-              {/* Contenido visible mientras carga o si el Reel no está definido */}
-              <div style={{ padding: '16px' }}>
-                <a
-                  href="https://www.instagram.com/unespacioarquitectos/reels/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <div className="flex flex-col items-center justify-center bg-olive/10" style={{ minHeight: '420px' }}>
-                    <InstagramIcon className="w-8 h-8 text-olive mb-3" />
-                    <p className="font-heading font-semibold text-sm text-dark-olive">Reel 1</p>
-                    <p className="font-sans text-xs text-olive/60 mt-1 text-center px-4 max-w-[200px]">
-                      Reemplaza REEL_ID_1 en el código con la URL de tu Reel
-                    </p>
-                  </div>
-                </a>
-              </div>
-            </blockquote>
-          </div>
-
-          {/* ┌─────────────────────────────────────────────────────────────────┐
-              │  REEL 2 ─── PEGA AQUÍ LA URL DE TU SEGUNDO REEL              │
-              │                                                                │
-              │  Localiza la línea data-instgrm-permalink y reemplaza         │
-              │  ÚNICAMENTE la URL entera por la URL de tu Reel:              │
-              │                                                                │
-              │  data-instgrm-permalink=                                       │
-              │    "https://www.instagram.com/reel/ ◄ PON AQUÍ TU URL        │
-              └───────────────────────────────────────────────────────────── */}
-          <div className="flex justify-center w-full">
-            <blockquote
-              className="instagram-media w-full"
-              data-instgrm-captioned
-              data-instgrm-permalink="https://www.instagram.com/reel/REEL_ID_2/?utm_source=ig_embed&amp;utm_campaign=loading"
-              data-instgrm-version="14"
-              style={{
-                background: '#FFF',
-                border: '0',
-                borderRadius: '3px',
-                boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
-                margin: '1px',
-                maxWidth: '540px',
-                minWidth: '326px',
-                padding: '0',
-                width: '100%',
-              }}
-            >
-              <div style={{ padding: '16px' }}>
-                <a
-                  href="https://www.instagram.com/unespacioarquitectos/reels/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <div className="flex flex-col items-center justify-center bg-dark-olive/10" style={{ minHeight: '420px' }}>
-                    <InstagramIcon className="w-8 h-8 text-olive mb-3" />
-                    <p className="font-heading font-semibold text-sm text-dark-olive">Reel 2</p>
-                    <p className="font-sans text-xs text-olive/60 mt-1 text-center px-4 max-w-[200px]">
-                      Reemplaza REEL_ID_2 en el código con la URL de tu Reel
-                    </p>
-                  </div>
-                </a>
-              </div>
-            </blockquote>
-          </div>
-
-          {/* ┌─────────────────────────────────────────────────────────────────┐
-              │  REEL 3 ─── PEGA AQUÍ LA URL DE TU TERCER REEL               │
-              │                                                                │
-              │  Localiza la línea data-instgrm-permalink y reemplaza         │
-              │  ÚNICAMENTE la URL entera por la URL de tu Reel:              │
-              │                                                                │
-              │  data-instgrm-permalink=                                       │
-              │    "https://www.instagram.com/reel/ ◄ PON AQUÍ TU URL        │
-              └───────────────────────────────────────────────────────────── */}
-          <div className="flex justify-center w-full">
-            <blockquote
-              className="instagram-media w-full"
-              data-instgrm-captioned
-              data-instgrm-permalink="https://www.instagram.com/reel/REEL_ID_3/?utm_source=ig_embed&amp;utm_campaign=loading"
-              data-instgrm-version="14"
-              style={{
-                background: '#FFF',
-                border: '0',
-                borderRadius: '3px',
-                boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
-                margin: '1px',
-                maxWidth: '540px',
-                minWidth: '326px',
-                padding: '0',
-                width: '100%',
-              }}
-            >
-              <div style={{ padding: '16px' }}>
-                <a
-                  href="https://www.instagram.com/unespacioarquitectos/reels/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <div className="flex flex-col items-center justify-center bg-olive/10" style={{ minHeight: '420px' }}>
-                    <InstagramIcon className="w-8 h-8 text-olive mb-3" />
-                    <p className="font-heading font-semibold text-sm text-dark-olive">Reel 3</p>
-                    <p className="font-sans text-xs text-olive/60 mt-1 text-center px-4 max-w-[200px]">
-                      Reemplaza REEL_ID_3 en el código con la URL de tu Reel
-                    </p>
-                  </div>
-                </a>
-              </div>
-            </blockquote>
-          </div>
-
+          {REELS.map((reel, i) =>
+            reel.url.trim() !== '' ? (
+              <ReelEmbed key={i} url={reel.url.trim()} />
+            ) : (
+              <ReelPlaceholder key={i} index={i} />
+            )
+          )}
         </div>
-        {/* ══ FIN GRID DE REELS ══════════════════════════════════════════════ */}
 
-        {/* ── CTA ── */}
+        {/* CTA */}
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-olive/20">
           <p className="font-sans text-sm text-olive/70 text-center sm:text-left">
             Más proyectos, procesos y reflexiones en Instagram.
@@ -245,21 +187,18 @@ export default function InstagramSection() {
 
       </div>
 
-      {/* ══════════════════════════════════════════════════════════════════════
-          SCRIPT OFICIAL DE INSTAGRAM — NO MOVER / NO ELIMINAR
-          ══════════════════════════════════════════════════════════════════════
-          Transforma los <blockquote> anteriores en reproductores reales de Reels.
-          Se carga de forma diferida (lazyOnload) para no afectar el rendimiento.
-          ══════════════════════════════════════════════════════════════════════ */}
-      <Script
-        src="https://www.instagram.com/embed.js"
-        strategy="lazyOnload"
-        onLoad={() => {
-          if (typeof window !== 'undefined' && window.instgrm) {
-            window.instgrm.Embeds.process()
-          }
-        }}
-      />
+      {/* Script de Instagram — solo se carga si hay al menos un Reel configurado */}
+      {hasAnyReel && (
+        <Script
+          src="https://www.instagram.com/embed.js"
+          strategy="lazyOnload"
+          onLoad={() => {
+            if (typeof window !== 'undefined' && window.instgrm) {
+              window.instgrm.Embeds.process()
+            }
+          }}
+        />
+      )}
 
     </section>
   )
