@@ -29,15 +29,15 @@ declare global {
 // ══════════════════════════════════════════════════════════════════════════════
 const REELS: { url: string; label: string }[] = [
   {
-    url: '', // ← PEGA AQUÍ la URL del PRIMER Reel
+    url: 'https://www.instagram.com/reel/DWmymA7gszX/', // ← Reel 1
     label: 'Reel 1',
   },
   {
-    url: '', // ← PEGA AQUÍ la URL del SEGUNDO Reel
+    url: 'https://www.instagram.com/reel/DW5CPxIDD0T/', // ← Reel 2
     label: 'Reel 2',
   },
   {
-    url: '', // ← PEGA AQUÍ la URL del TERCER Reel
+    url: 'https://www.instagram.com/reel/DXpMvmjkQcx/', // ← Reel 3
     label: 'Reel 3',
   },
 ]
