@@ -1,0 +1,54 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+
+# Production
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Claude internal
+.claude/
+
+# Large source/design files (not needed in repo)
+FOTOS/
+IMAGENES_PROYECTOS/
+hospital_tatama.jpg
+logo_unespacio.ai
+colores_unespacio.png
+perfil1.png
+perfil2.png
+logosimbolo_unespacio.png
+
+# PDF source docs
+*.pdf
