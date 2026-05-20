@@ -41,8 +41,8 @@ next-env.d.ts
 .claude/
 
 # Large source/design files (not needed in repo)
-FOTOS/
-IMAGENES_PROYECTOS/
+/FOTOS/
+/IMAGENES_PROYECTOS/
 hospital_tatama.jpg
 logo_unespacio.ai
 colores_unespacio.png
