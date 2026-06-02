@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-const WHATSAPP_NUMBER = '573001234567' // TODO: reemplazar con número real
+const WHATSAPP_NUMBER = '573014375950'
 const WHATSAPP_MESSAGE = 'Hola, me interesa conocer más sobre los servicios de UnEspacio Arquitectos.'
 
 export default function WhatsAppButton() {

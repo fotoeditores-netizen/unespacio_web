@@ -1,44 +1,32 @@
-'use client'
-
-import { useEffect } from 'react'
-import Script from 'next/script'
-
-declare global {
-  interface Window {
-    instgrm?: {
-      Embeds: {
-        process: () => void
-      }
-    }
-  }
-}
+import Image from 'next/image'
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  CONFIGURACIÓN DE REELS — EDITA ÚNICAMENTE ESTA SECCIÓN
 // ══════════════════════════════════════════════════════════════════════════════
 //
-//  Cómo obtener la URL de un Reel:
-//  1. Abre el Reel en Instagram
-//  2. Toca los 3 puntos (···) → "Insertar" (Embed)
-//  3. Copia la URL que aparece en: data-instgrm-permalink="..."
-//     Formato: https://www.instagram.com/reel/XXXXXXXXXXX/?utm_source=ig_embed
+//  image: ruta de la imagen en /public (se muestra siempre, nunca desaparece)
+//  url:   enlace al Reel en Instagram (se abre al hacer clic)
+//  label: texto alternativo de la imagen
 //
-//  Pega cada URL en el campo "url" del Reel correspondiente.
-//  Deja url: '' para mostrar el placeholder hasta que tengas el enlace real.
+//  Cuando instales el CMS, estos datos vendrán desde allá — la estructura
+//  de cada tarjeta no cambia.
 //
 // ══════════════════════════════════════════════════════════════════════════════
-const REELS: { url: string; label: string }[] = [
+const REELS: { url: string; image: string; label: string }[] = [
   {
-    url: 'https://www.instagram.com/reel/DWmymA7gszX/', // ← Reel 1
-    label: 'Reel 1',
+    url: 'https://www.instagram.com/reel/DWmymA7gszX/',
+    image: '/fotos/instagram/tarjeta-1.jpg',
+    label: 'Reel 1 — @unespacioarquitectos',
   },
   {
-    url: 'https://www.instagram.com/reel/DW5CPxIDD0T/', // ← Reel 2
-    label: 'Reel 2',
+    url: 'https://www.instagram.com/reel/DW5CPxIDD0T/',
+    image: '/fotos/instagram/tarjeta-2.jpg',
+    label: 'Reel 2 — @unespacioarquitectos',
   },
   {
-    url: 'https://www.instagram.com/reel/DXpMvmjkQcx/', // ← Reel 3
-    label: 'Reel 3',
+    url: 'https://www.instagram.com/reel/DXpMvmjkQcx/',
+    image: '/fotos/instagram/tarjeta-3.jpg',
+    label: 'Reel 3 — @unespacioarquitectos',
   },
 ]
 // ══════════════════════════════════════════════════════════════════════════════
@@ -51,78 +39,38 @@ function InstagramIcon({ className }: { className?: string }) {
   )
 }
 
-/** Tarjeta placeholder — se muestra cuando url está vacía */
-function ReelPlaceholder({ index }: { index: number }) {
-  const bg = index === 1 ? 'bg-dark-olive/10' : 'bg-olive/10'
+function ReelCard({ url, image, label }: { url: string; image: string; label: string }) {
   return (
     <a
-      href="https://www.instagram.com/unespacioarquitectos/reels/"
+      href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex flex-col items-center justify-center gap-3 border border-olive/20 hover:border-olive/50 transition-colors"
-      style={{ minHeight: '480px' }}
+      className="group relative block overflow-hidden"
+      aria-label={label}
     >
-      <InstagramIcon className="w-8 h-8 text-olive/40" />
-      <div className="text-center px-6">
-        <p className="font-heading font-semibold text-sm text-dark-olive/60">
-          @unespacioarquitectos
-        </p>
-        <p className="font-sans text-xs text-olive/50 mt-1">
-          Próximamente
-        </p>
+      <div className="relative w-full" style={{ aspectRatio: '9/16' }}>
+        <Image
+          src={image}
+          alt={label}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, 33vw"
+        />
+        {/* Overlay con icono de Instagram al hacer hover */}
+        <div className="absolute inset-0 bg-dark-olive/0 group-hover:bg-dark-olive/40 transition-colors duration-300 flex items-center justify-center">
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center gap-2">
+            <InstagramIcon className="w-10 h-10 text-white" />
+            <span className="font-heading font-semibold text-white text-xs tracking-widest uppercase">
+              Ver Reel
+            </span>
+          </div>
+        </div>
       </div>
     </a>
   )
 }
 
-/** Embed nativo de Instagram — se muestra cuando url tiene valor */
-function ReelEmbed({ url }: { url: string }) {
-  return (
-    <div className="flex justify-center w-full">
-      <blockquote
-        className="instagram-media w-full"
-        data-instgrm-captioned
-        data-instgrm-permalink={`${url}&utm_source=ig_embed&utm_campaign=loading`}
-        data-instgrm-version="14"
-        style={{
-          background: '#FFF',
-          border: '0',
-          borderRadius: '3px',
-          boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
-          margin: '1px',
-          maxWidth: '540px',
-          minWidth: '326px',
-          padding: '0',
-          width: '100%',
-        }}
-      >
-        <div style={{ padding: '16px' }}>
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <div className="flex flex-col items-center justify-center bg-olive/10" style={{ minHeight: '420px' }}>
-              <InstagramIcon className="w-8 h-8 text-olive mb-2" />
-              <p className="font-sans text-xs text-olive/70">Ver en Instagram</p>
-            </div>
-          </a>
-        </div>
-      </blockquote>
-    </div>
-  )
-}
-
 export default function InstagramSection() {
-  const hasAnyReel = REELS.some((r) => r.url.trim() !== '')
-
-  useEffect(() => {
-    if (hasAnyReel && typeof window !== 'undefined' && window.instgrm) {
-      window.instgrm.Embeds.process()
-    }
-  }, [hasAnyReel])
-
   return (
     <section className="section-padding bg-cream">
       <div className="container-custom">
@@ -159,13 +107,9 @@ export default function InstagramSection() {
 
         {/* Grid 3 columnas */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-          {REELS.map((reel, i) =>
-            reel.url.trim() !== '' ? (
-              <ReelEmbed key={i} url={reel.url.trim()} />
-            ) : (
-              <ReelPlaceholder key={i} index={i} />
-            )
-          )}
+          {REELS.map((reel, i) => (
+            <ReelCard key={i} url={reel.url} image={reel.image} label={reel.label} />
+          ))}
         </div>
 
         {/* CTA */}
@@ -186,20 +130,6 @@ export default function InstagramSection() {
         </div>
 
       </div>
-
-      {/* Script de Instagram — solo se carga si hay al menos un Reel configurado */}
-      {hasAnyReel && (
-        <Script
-          src="https://www.instagram.com/embed.js"
-          strategy="lazyOnload"
-          onLoad={() => {
-            if (typeof window !== 'undefined' && window.instgrm) {
-              window.instgrm.Embeds.process()
-            }
-          }}
-        />
-      )}
-
     </section>
   )
 }

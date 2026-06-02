@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import ContactForm from '@/components/contacto/ContactForm'
-import CalendlySection from '@/components/contacto/CalendlySection'
+import BotonAgendarCita from '@/components/agendamiento/BotonAgendarCita'
 
 export const metadata: Metadata = {
   title: 'Contacto',
@@ -26,8 +26,8 @@ const contactInfo = [
       </svg>
     ),
     label: 'WhatsApp',
-    value: '+57 300 123 4567',
-    href: 'https://wa.me/573001234567?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20UnEspacio%20Arquitectos.',
+    value: '+57 301 437 5950',
+    href: 'https://wa.me/573014375950?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20UnEspacio%20Arquitectos.',
   },
   {
     icon: (
@@ -116,7 +116,10 @@ export default function ContactoPage() {
                 <p className="font-sans text-sm text-olive leading-relaxed mb-6">
                   Reserva un espacio en nuestro calendario para una primera conversación de 30 minutos.
                 </p>
-                <CalendlySection />
+                <BotonAgendarCita
+                  label="Reservar espacio en el calendario →"
+                  className="btn-primary py-4 text-sm"
+                />
               </div>
 
               {/* Trust signals */}
@@ -159,7 +162,7 @@ export default function ContactoPage() {
             </div>
           </div>
           <a
-            href="https://wa.me/573001234567?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20UnEspacio%20Arquitectos."
+            href="https://wa.me/573014375950?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20UnEspacio%20Arquitectos."
             target="_blank"
             rel="noopener noreferrer"
             className="font-heading font-semibold text-xs tracking-wider uppercase bg-white text-[#25D366] px-8 py-3.5 hover:bg-green-50 transition-colors flex-shrink-0"
