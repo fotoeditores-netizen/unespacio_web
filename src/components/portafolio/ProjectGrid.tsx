@@ -1,115 +1,120 @@
-'use client'
+/**
+ * ProjectGrid — Server Component
+ * Obtiene proyectos de Sanity CMS y pasa los datos al componente de filtro (Client).
+ * Revalida cada 60 segundos (ISR): los cambios en el CMS se ven en ~1 minuto.
+ */
+import { client } from '@/sanity/lib/client'
+import { ALL_PROJECTS_QUERY, type Project } from '@/sanity/lib/queries'
+import ProjectGridClient from './ProjectGridClient'
 
-import { useState } from 'react'
-import Image from 'next/image'
-
-const categories = ['Todos', 'Educativa', 'Corporativa', 'Cultural', 'Salud', 'Comercial', 'Residencial']
-
-const projects = [
-  { id: 1, title: 'Hospital Tatamá', category: 'Salud', area: '41.000 m²', year: '2023', size: 'large', image: '/fotos/hospital-tatama.jpg' },
-  { id: 2, title: 'CDI Pasacaballos', category: 'Educativa', area: '320 m²', year: '2022', size: 'normal', image: '/fotos/proyecto-cdi.jpg' },
-  { id: 3, title: 'Centro de Idiomas EAFIT', category: 'Corporativa', area: '4.800 m²', year: '2022', size: 'wide', image: '/fotos/proyecto-centro-idiomas.jpg' },
-  { id: 4, title: 'Facultad de Artes', category: 'Cultural', area: '3.200 m²', year: '2023', size: 'normal', image: '/fotos/proyecto-facultad-artes.jpg' },
-  { id: 5, title: 'Casa CEM', category: 'Residencial', area: '480 m²', year: '2024', size: 'large', image: '/fotos/casa-cem2.jpg' },
-  { id: 6, title: 'Casa CEL', category: 'Residencial', area: '320 m²', year: '2023', size: 'normal', image: '/fotos/proyecto-casa-cel.jpg' },
-  { id: 7, title: 'Casa CLE', category: 'Residencial', area: '650 m²', year: '2022', size: 'normal', image: '/fotos/servicio-residencial.jpg' },
-  { id: 8, title: 'Restaurante', category: 'Comercial', area: '280 m²', year: '2023', size: 'normal', image: '/fotos/servicio-comercial.jpg' },
-  { id: 9, title: 'Concurso Ambientes Educativos', category: 'Educativa', area: '2.400 m²', year: '2021', size: 'normal', image: '/fotos/quote-educativo.jpg' },
-  { id: 10, title: 'Concurso Colegio', category: 'Educativa', area: '1.800 m²', year: '2021', size: 'normal', image: '/fotos/concurso-colegio.jpg' },
+// ─── Datos de respaldo (se usan mientras el CMS está vacío) ─────────────────
+const FALLBACK_PROJECTS: Project[] = [
+  {
+    _id: '1', title: 'Hospital Tatamá', slug: { current: 'hospital-tatama' },
+    category: 'Salud', area: '41.000 m²', year: 2023,
+    featuredSize: 'large', order: 1,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'Hospital Tatamá' },
+  },
+  {
+    _id: '2', title: 'CDI Pasacaballos', slug: { current: 'cdi-pasacaballos' },
+    category: 'Educativa', area: '320 m²', year: 2022,
+    featuredSize: 'normal', order: 2,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'CDI Pasacaballos' },
+  },
+  {
+    _id: '3', title: 'Centro de Idiomas EAFIT', slug: { current: 'centro-idiomas-eafit' },
+    category: 'Corporativa', area: '4.800 m²', year: 2022,
+    featuredSize: 'wide', order: 3,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'Centro de Idiomas EAFIT' },
+  },
+  {
+    _id: '4', title: 'Facultad de Artes', slug: { current: 'facultad-artes' },
+    category: 'Cultural', area: '3.200 m²', year: 2023,
+    featuredSize: 'normal', order: 4,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'Facultad de Artes' },
+  },
+  {
+    _id: '5', title: 'Casa CEM', slug: { current: 'casa-cem' },
+    category: 'Residencial', area: '480 m²', year: 2024,
+    featuredSize: 'large', order: 5,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'Casa CEM' },
+  },
+  {
+    _id: '6', title: 'Casa CEL', slug: { current: 'casa-cel' },
+    category: 'Residencial', area: '320 m²', year: 2023,
+    featuredSize: 'normal', order: 6,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'Casa CEL' },
+  },
+  {
+    _id: '7', title: 'Casa CLE', slug: { current: 'casa-cle' },
+    category: 'Residencial', area: '650 m²', year: 2022,
+    featuredSize: 'normal', order: 7,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'Casa CLE' },
+  },
+  {
+    _id: '8', title: 'Restaurante', slug: { current: 'restaurante' },
+    category: 'Comercial', area: '280 m²', year: 2023,
+    featuredSize: 'normal', order: 8,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'Restaurante' },
+  },
+  {
+    _id: '9', title: 'Concurso Ambientes Educativos', slug: { current: 'concurso-ambientes' },
+    category: 'Educativa', area: '2.400 m²', year: 2021,
+    featuredSize: 'normal', order: 9,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'Concurso Ambientes Educativos' },
+  },
+  {
+    _id: '10', title: 'Concurso Colegio', slug: { current: 'concurso-colegio' },
+    category: 'Educativa', area: '1.800 m²', year: 2021,
+    featuredSize: 'normal', order: 10,
+    coverImage: { _type: 'image', asset: { _ref: '', _type: 'reference' }, alt: 'Concurso Colegio' },
+  },
 ]
 
-const categoryColors: Record<string, string> = {
-  Educativa: 'bg-blue-100 text-blue-800',
-  Corporativa: 'bg-olive/10 text-dark-olive',
-  Cultural: 'bg-purple-100 text-purple-800',
-  Salud: 'bg-green-100 text-green-800',
-  Comercial: 'bg-amber-100 text-amber-800',
-  Residencial: 'bg-cream text-dark-olive',
+// Imágenes locales de respaldo mapeadas por slug
+const LOCAL_FALLBACK_IMAGES: Record<string, string> = {
+  'hospital-tatama': '/fotos/hospital-tatama.jpg',
+  'cdi-pasacaballos': '/fotos/proyecto-cdi.jpg',
+  'centro-idiomas-eafit': '/fotos/proyecto-centro-idiomas.jpg',
+  'facultad-artes': '/fotos/proyecto-facultad-artes.jpg',
+  'casa-cem': '/fotos/casa-cem2.jpg',
+  'casa-cel': '/fotos/proyecto-casa-cel.jpg',
+  'casa-cle': '/fotos/servicio-residencial.jpg',
+  'restaurante': '/fotos/servicio-comercial.jpg',
+  'concurso-ambientes': '/fotos/quote-educativo.jpg',
+  'concurso-colegio': '/fotos/concurso-colegio.jpg',
 }
 
-export default function ProjectGrid() {
-  const [active, setActive] = useState('Todos')
+// Revalida cada 60 segundos
+export const revalidate = 60
 
-  const filtered = active === 'Todos'
-    ? projects
-    : projects.filter((p) => p.category === active)
+export default async function ProjectGrid() {
+  let projects: Project[] = []
+  let usingSanity = false
+
+  // Intentar obtener datos de Sanity
+  if (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    try {
+      const data = await client.fetch<Project[]>(ALL_PROJECTS_QUERY)
+      if (data && data.length > 0) {
+        projects = data
+        usingSanity = true
+      }
+    } catch (err) {
+      console.warn('[ProjectGrid] No se pudo conectar a Sanity, usando datos locales.', err)
+    }
+  }
+
+  // Usar datos de respaldo si Sanity está vacío o no configurado
+  if (!usingSanity) {
+    projects = FALLBACK_PROJECTS
+  }
 
   return (
-    <div>
-      {/* Filter bar */}
-      <div className="flex flex-wrap gap-2 mb-12">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActive(cat)}
-            className={`font-heading font-semibold text-xs tracking-wider uppercase px-5 py-2.5 transition-all duration-200 ${
-              active === cat
-                ? 'bg-dark-olive text-white'
-                : 'bg-cream text-dark-olive hover:bg-olive hover:text-white'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((project) => (
-          <div
-            key={project.id}
-            className={`group relative overflow-hidden cursor-pointer ${
-              project.size === 'large' ? 'lg:col-span-1 lg:row-span-2' :
-              project.size === 'wide' ? 'lg:col-span-2' : ''
-            }`}
-            style={{
-              minHeight: project.size === 'large' ? '480px' : '260px',
-            }}
-          >
-            {/* Project image */}
-            <Image
-              src={project.image}
-              alt={`${project.title} — UnEspacio Arquitectos`}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-              quality={80}
-            />
-
-            {/* Corner accents */}
-            <div className="absolute top-4 left-4 w-8 h-8 border-t border-l border-olive/30" />
-            <div className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-olive/30" />
-
-            {/* Category badge */}
-            <div className="absolute top-4 right-4">
-              <span className={`font-sans text-xs px-2.5 py-1 ${categoryColors[project.category] || 'bg-cream text-dark-olive'}`}>
-                {project.category}
-              </span>
-            </div>
-
-            {/* Hover overlay */}
-            <div className="absolute inset-0 bg-dark-olive/0 group-hover:bg-dark-olive/85 transition-all duration-300" />
-
-            {/* Info */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-              <p className="font-sans text-xs text-cream/60 mb-1">{project.area} · {project.year}</p>
-              <h3 className="font-heading font-bold text-xl text-white">{project.title}</h3>
-              <div className="flex items-center gap-2 mt-3 font-heading text-xs text-cream/70 tracking-wider uppercase">
-                Ver proyecto
-                <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
-        <div className="text-center py-20">
-          <p className="font-sans text-olive">No hay proyectos en esta categoría aún.</p>
-        </div>
-      )}
-    </div>
+    <ProjectGridClient
+      projects={projects}
+      usingSanity={usingSanity}
+      localImages={LOCAL_FALLBACK_IMAGES}
+    />
   )
 }

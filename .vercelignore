@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+FOTOS
+IMAGENES_PROYECTOS
+hospital_tatama.jpg
+logo_unespacio.ai
+colores_unespacio.png
+perfil1.png
+perfil2.png
+logosimbolo_unespacio.png
+*.pdf
+.claude
+*.tsbuildinfo
