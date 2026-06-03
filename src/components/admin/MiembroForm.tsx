@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { crearMiembroAction, actualizarMiembroAction } from '@/actions/equipo'
+import ImageUploader from '@/components/admin/ImageUploader'
 import type { Miembro } from '@/types/equipo'
 
 interface Props { miembro?: Miembro }
@@ -11,7 +12,6 @@ export default function MiembroForm({ miembro }: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
-  const [subiendoFoto, setSubiendoFoto] = useState(false)
   const [form, setForm] = useState({
     nombre: miembro?.nombre ?? '',
     rol: miembro?.rol ?? '',
@@ -23,20 +23,6 @@ export default function MiembroForm({ miembro }: Props) {
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value, type } = e.target
     setForm(prev => ({ ...prev, [name]: type === 'number' ? Number(value) : value }))
-  }
-
-  async function handleFotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setSubiendoFoto(true)
-    const fd = new FormData()
-    fd.append('file', file)
-    fd.append('folder', 'equipo')
-    const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-    const json = await res.json()
-    if (json.url) setForm(prev => ({ ...prev, foto: json.url }))
-    setSubiendoFoto(false)
-    e.target.value = ''
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -72,15 +58,13 @@ export default function MiembroForm({ miembro }: Props) {
           placeholder="Descripción del miembro del equipo..." />
       </div>
       <div>
-        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-          Foto {subiendoFoto && <span className="text-blue-500 normal-case font-normal ml-2">Subiendo...</span>}
-        </label>
-        {form.foto && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={form.foto} alt="" className="w-20 h-20 object-cover mb-2" />
-        )}
-        <input type="file" accept="image/*" onChange={handleFotoUpload} disabled={subiendoFoto}
-          className="block text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:border file:border-gray-300 file:text-xs file:font-semibold file:bg-white hover:file:bg-gray-50 file:cursor-pointer" />
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Foto</label>
+        <ImageUploader
+          folder="equipo"
+          multiple={false}
+          value={form.foto}
+          onChange={(v) => setForm(prev => ({ ...prev, foto: typeof v === 'string' ? v : v[0] ?? '' }))}
+        />
       </div>
       <div>
         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Orden</label>
@@ -93,7 +77,7 @@ export default function MiembroForm({ miembro }: Props) {
           className="border border-gray-300 text-gray-700 text-xs font-semibold uppercase tracking-wide px-6 py-2.5 hover:bg-gray-50 transition-colors">
           Cancelar
         </button>
-        <button type="submit" disabled={isPending || subiendoFoto}
+        <button type="submit" disabled={isPending}
           className="bg-gray-900 text-white text-xs font-semibold uppercase tracking-wide px-6 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-50">
           {isPending ? 'Guardando...' : miembro ? 'Guardar cambios' : 'Crear miembro'}
         </button>

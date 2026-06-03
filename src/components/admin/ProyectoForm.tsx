@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { crearProyectoAction, actualizarProyectoAction } from '@/actions/proyectos'
+import ImageUploader from '@/components/admin/ImageUploader'
 import type { Proyecto, Tipologia } from '@/types/proyectos'
 
 const TIPOLOGIAS: { value: Tipologia; label: string }[] = [
@@ -27,8 +28,6 @@ export default function ProyectoForm({ proyecto }: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
-  const [subiendoImagen, setSubiendoImagen] = useState(false)
-
   const [form, setForm] = useState({
     titulo: proyecto?.titulo ?? '',
     slug: proyecto?.slug ?? '',
@@ -58,42 +57,13 @@ export default function ProyectoForm({ proyecto }: Props) {
     }
   }
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = e.target.files
-    if (!files || files.length === 0) return
-    setSubiendoImagen(true)
-
-    const nuevasUrls: string[] = []
-    for (const file of Array.from(files)) {
-      const fd = new FormData()
-      fd.append('file', file)
-      fd.append('folder', 'proyectos')
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-      const json = await res.json()
-      if (json.url) nuevasUrls.push(json.url)
-    }
-
-    setForm(prev => {
-      const todasImagenes = [...prev.imagenes, ...nuevasUrls]
-      return {
-        ...prev,
-        imagenes: todasImagenes,
-        imagen_portada: prev.imagen_portada || todasImagenes[0] || '',
-      }
-    })
-    setSubiendoImagen(false)
-    e.target.value = ''
-  }
-
-  function eliminarImagen(url: string) {
-    setForm(prev => {
-      const imagenes = prev.imagenes.filter(i => i !== url)
-      return {
-        ...prev,
-        imagenes,
-        imagen_portada: prev.imagen_portada === url ? (imagenes[0] ?? '') : prev.imagen_portada,
-      }
-    })
+  function handleImagenesChange(urls: string | string[]) {
+    const imagenes = Array.isArray(urls) ? urls : urls ? [urls] : []
+    setForm(prev => ({
+      ...prev,
+      imagenes,
+      imagen_portada: imagenes[0] ?? '',
+    }))
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -189,31 +159,13 @@ export default function ProyectoForm({ proyecto }: Props) {
 
       {/* Subida de imágenes */}
       <div>
-        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-          Imágenes {subiendoImagen && <span className="text-blue-500 normal-case font-normal ml-2">Subiendo...</span>}
-        </label>
-        <input type="file" accept="image/*" multiple onChange={handleImageUpload} disabled={subiendoImagen}
-          className="block text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:border file:border-gray-300 file:text-xs file:font-semibold file:bg-white hover:file:bg-gray-50 file:cursor-pointer" />
-
-        {form.imagenes.length > 0 && (
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mt-3">
-            {form.imagenes.map((url) => (
-              <div key={url} className="relative group">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt="" className={`w-full aspect-square object-cover border-2 ${form.imagen_portada === url ? 'border-gray-800' : 'border-transparent'}`} />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-1 items-center justify-center">
-                  <button type="button" onClick={() => setForm(p => ({ ...p, imagen_portada: url }))}
-                    className="text-xs bg-white text-gray-800 px-2 py-0.5 rounded">Portada</button>
-                  <button type="button" onClick={() => eliminarImagen(url)}
-                    className="text-xs bg-red-600 text-white px-2 py-0.5 rounded">Eliminar</button>
-                </div>
-                {form.imagen_portada === url && (
-                  <span className="absolute top-1 left-1 text-xs bg-gray-800 text-white px-1.5 py-0.5 rounded">Portada</span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Imágenes</label>
+        <ImageUploader
+          folder="proyectos"
+          multiple
+          value={form.imagenes}
+          onChange={handleImagenesChange}
+        />
       </div>
 
       {error && <p className="text-red-600 text-xs bg-red-50 px-3 py-2">{error}</p>}
@@ -223,7 +175,7 @@ export default function ProyectoForm({ proyecto }: Props) {
           className="border border-gray-300 text-gray-700 text-xs font-semibold uppercase tracking-wide px-6 py-2.5 hover:bg-gray-50 transition-colors">
           Cancelar
         </button>
-        <button type="submit" disabled={isPending || subiendoImagen}
+        <button type="submit" disabled={isPending}
           className="bg-gray-900 text-white text-xs font-semibold uppercase tracking-wide px-6 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-50">
           {isPending ? 'Guardando...' : proyecto ? 'Guardar cambios' : 'Crear proyecto'}
         </button>

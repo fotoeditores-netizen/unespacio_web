@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { crearServicioAction, actualizarServicioAction } from '@/actions/servicios'
+import ImageUploader from '@/components/admin/ImageUploader'
 import type { Servicio } from '@/types/servicios'
 
 interface Props { servicio?: Servicio }
@@ -11,7 +12,6 @@ export default function ServicioForm({ servicio }: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
-  const [subiendoImagen, setSubiendoImagen] = useState(false)
   const [form, setForm] = useState({
     nombre: servicio?.nombre ?? '',
     slug_anchor: servicio?.slug_anchor ?? '',
@@ -24,20 +24,6 @@ export default function ServicioForm({ servicio }: Props) {
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value, type } = e.target
     setForm(prev => ({ ...prev, [name]: type === 'number' ? Number(value) : value }))
-  }
-
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setSubiendoImagen(true)
-    const fd = new FormData()
-    fd.append('file', file)
-    fd.append('folder', 'servicios')
-    const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-    const json = await res.json()
-    if (json.url) setForm(prev => ({ ...prev, imagen_hero: json.url }))
-    setSubiendoImagen(false)
-    e.target.value = ''
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -81,15 +67,13 @@ export default function ServicioForm({ servicio }: Props) {
           placeholder="Descripción detallada del servicio..." />
       </div>
       <div>
-        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-          Imagen hero {subiendoImagen && <span className="text-blue-500 normal-case font-normal ml-2">Subiendo...</span>}
-        </label>
-        {form.imagen_hero && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={form.imagen_hero} alt="" className="w-full h-32 object-cover mb-2" />
-        )}
-        <input type="file" accept="image/*" onChange={handleImageUpload} disabled={subiendoImagen}
-          className="block text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:border file:border-gray-300 file:text-xs file:font-semibold file:bg-white hover:file:bg-gray-50 file:cursor-pointer" />
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Imagen hero</label>
+        <ImageUploader
+          folder="servicios"
+          multiple={false}
+          value={form.imagen_hero}
+          onChange={(v) => setForm(prev => ({ ...prev, imagen_hero: typeof v === 'string' ? v : v[0] ?? '' }))}
+        />
       </div>
       <div>
         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Orden</label>
@@ -102,7 +86,7 @@ export default function ServicioForm({ servicio }: Props) {
           className="border border-gray-300 text-gray-700 text-xs font-semibold uppercase tracking-wide px-6 py-2.5 hover:bg-gray-50 transition-colors">
           Cancelar
         </button>
-        <button type="submit" disabled={isPending || subiendoImagen}
+        <button type="submit" disabled={isPending}
           className="bg-gray-900 text-white text-xs font-semibold uppercase tracking-wide px-6 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-50">
           {isPending ? 'Guardando...' : servicio ? 'Guardar cambios' : 'Crear servicio'}
         </button>
