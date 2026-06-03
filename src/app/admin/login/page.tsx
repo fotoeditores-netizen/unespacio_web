@@ -25,7 +25,7 @@ export default function AdminLoginPage() {
       return
     }
 
-    router.push('/admin/citas')
+    router.push('/admin')
     router.refresh()
   }
 
