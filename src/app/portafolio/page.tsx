@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import ProjectGrid from '@/components/portafolio/ProjectGrid'
 import Link from 'next/link'
+import { getProyectos } from '@/lib/proyectos'
 
 export const metadata: Metadata = {
   title: 'Portafolio',
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
     'Proyectos de UnEspacio Arquitectos en arquitectura educativa, corporativa, cultural, de salud, comercial y residencial. Desde 320 m² hasta 41.000 m².',
 }
 
-export default function PortafolioPage() {
+export default async function PortafolioPage() {
+  let proyectos: Awaited<ReturnType<typeof getProyectos>> = []
+  try { proyectos = await getProyectos() } catch { /* usa fallback */ }
   return (
     <>
       {/* Header */}
@@ -39,7 +42,7 @@ export default function PortafolioPage() {
       {/* Grid */}
       <section className="section-padding bg-white">
         <div className="container-custom">
-          <ProjectGrid />
+          <ProjectGrid proyectos={proyectos} />
         </div>
       </section>
 
