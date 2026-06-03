@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import type { Miembro } from '@/types/equipo'
 
 type TabKey = 'laura' | 'juan'
 
@@ -397,25 +398,31 @@ function JuanCVContent() {
   )
 }
 
-export default function TeamSection() {
+interface Props { equipo?: Miembro[] }
+
+export default function TeamSection({ equipo }: Props) {
   const [activeTab, setActiveTab] = useState<TabKey>('laura')
+
+  // Busca en Supabase por nombre parcial; si no hay datos usa los valores hardcodeados
+  const lauraDB = equipo?.find(m => m.nombre.toLowerCase().includes('laura'))
+  const juanDB = equipo?.find(m => m.nombre.toLowerCase().includes('juan'))
 
   const profiles: { key: TabKey; photo: string; name: string; fullName: string; born: string; role: string }[] = [
     {
       key: 'laura',
-      photo: '/perfil1.png',
-      name: 'Laura Maya Torres',
-      fullName: 'Arquitecta Laura Maya Torres',
+      photo: lauraDB?.foto || '/perfil1.png',
+      name: lauraDB?.nombre || 'Laura Maya Torres',
+      fullName: lauraDB?.nombre || 'Arquitecta Laura Maya Torres',
       born: '1990 · Medellín – Colombia',
-      role: 'Co-fundadora · Dirección de Diseño',
+      role: lauraDB?.rol || 'Co-fundadora · Dirección de Diseño',
     },
     {
       key: 'juan',
-      photo: '/perfil2.png',
-      name: 'Juan Esteban Ramírez Henao',
-      fullName: 'Arquitecto Juan Esteban Ramírez Henao',
+      photo: juanDB?.foto || '/perfil2.png',
+      name: juanDB?.nombre || 'Juan Esteban Ramírez Henao',
+      fullName: juanDB?.nombre || 'Arquitecto Juan Esteban Ramírez Henao',
       born: '1982 · Medellín – Colombia',
-      role: 'Co-fundador · Dirección de Proyecto',
+      role: juanDB?.rol || 'Co-fundador · Dirección de Proyecto',
     },
   ]
 

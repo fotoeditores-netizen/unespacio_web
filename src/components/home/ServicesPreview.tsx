@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { getServicios } from '@/lib/servicios'
 
-const services = [
+const FALLBACK = [
   { id: 'educativa', number: '01', title: 'Educativa', sub: 'Aulas · Campus · Colegios' },
   { id: 'corporativa', number: '02', title: 'Corporativa', sub: 'Oficinas · Torres · Sedes' },
   { id: 'cultural', number: '03', title: 'Cultural', sub: 'Museos · Teatros · Plazas' },
@@ -9,7 +10,18 @@ const services = [
   { id: 'residencial', number: '06', title: 'Residencial', sub: 'Casas · Conjuntos' },
 ]
 
-export default function ServicesPreview() {
+export default async function ServicesPreview() {
+  let serviciosDB: Awaited<ReturnType<typeof getServicios>> = []
+  try { serviciosDB = await getServicios() } catch { /* usa fallback */ }
+
+  const services = serviciosDB.length > 0
+    ? serviciosDB.map((s, i) => ({
+        id: s.slug_anchor,
+        number: String(i + 1).padStart(2, '0'),
+        title: s.nombre.replace('Arquitectura ', '').replace('Arquitectura de ', ''),
+        sub: s.descripcion_corta,
+      }))
+    : FALLBACK
   return (
     <section className="bg-cream border-t border-cream-dark">
       <div className="container-custom py-16 md:py-20">

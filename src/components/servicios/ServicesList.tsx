@@ -1,7 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { getServicios } from '@/lib/servicios'
 
-const services = [
+const SERVICES_STATIC = [
   {
     id: 'educativa',
     number: '01',
@@ -101,7 +102,20 @@ const services = [
   },
 ]
 
-export default function ServicesList() {
+export default async function ServicesList() {
+  let serviciosDB: Awaited<ReturnType<typeof getServicios>> = []
+  try { serviciosDB = await getServicios() } catch { /* usa fallback */ }
+
+  // Combina datos estáticos con imagen_hero y descripcion_corta de Supabase
+  const services = SERVICES_STATIC.map(s => {
+    const db = serviciosDB.find(d => d.slug_anchor === s.id)
+    return {
+      ...s,
+      description: db?.descripcion_corta || s.description,
+      image: { ...s.image, src: db?.imagen_hero || s.image.src },
+    }
+  })
+
   return (
     <div>
       {services.map((service, i) => (

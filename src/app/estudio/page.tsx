@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import TeamSection from '@/components/estudio/TeamSection'
 import PhilosophySection from '@/components/estudio/PhilosophySection'
 import Link from 'next/link'
+import { getEquipo } from '@/lib/equipo'
 
 export const metadata: Metadata = {
   title: 'El Estudio',
@@ -9,7 +10,9 @@ export const metadata: Metadata = {
     'Conoce a Laura Maya y Juan Esteban Ramírez, los fundadores de UnEspacio Arquitectos. Más de 20 años de experiencia combinada al servicio de cada proyecto.',
 }
 
-export default function EstudioPage() {
+export default async function EstudioPage() {
+  let equipo: Awaited<ReturnType<typeof getEquipo>> = []
+  try { equipo = await getEquipo() } catch { /* usa fallback */ }
   return (
     <>
       {/* Page Header */}
@@ -28,7 +31,7 @@ export default function EstudioPage() {
         </div>
       </section>
 
-      <TeamSection />
+      <TeamSection equipo={equipo} />
       <PhilosophySection />
 
       {/* CTA */}
