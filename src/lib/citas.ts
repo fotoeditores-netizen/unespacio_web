@@ -56,5 +56,18 @@ export async function getDisponibilidad(fecha: string): Promise<string[]> {
 
   if (error) throw new Error(error.message)
   const ocupadas = (data ?? []).map((r: { hora: string }) => r.hora)
-  return HORAS.filter((h) => !ocupadas.includes(h))
+
+  // Si la fecha es hoy (en Colombia, UTC-5), excluir horas que ya pasaron
+  const ahoraColombia = new Date(Date.now() - 5 * 60 * 60 * 1000)
+  const hoyColombia = ahoraColombia.toISOString().split('T')[0]
+  const esHoy = fecha === hoyColombia
+  const horaActual = esHoy
+    ? `${String(ahoraColombia.getUTCHours()).padStart(2, '0')}:00`
+    : null
+
+  return HORAS.filter((h) => {
+    if (ocupadas.includes(h)) return false
+    if (horaActual && h <= horaActual) return false
+    return true
+  })
 }
