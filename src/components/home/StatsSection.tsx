@@ -1,11 +1,26 @@
-const stats = [
+import type { ContentMap } from '@/types/content'
+
+interface StatsSectionProps {
+  content: ContentMap
+}
+
+const DEFAULTS = [
   { value: '+20', unit: 'años', label: 'de experiencia\ncombinada' },
   { value: '6', unit: 'tipologías', label: 'de arquitectura\nespecializada' },
   { value: '41K', unit: 'm²', label: 'proyecto de\nmayor escala' },
   { value: '2021', unit: '', label: 'año de\nfundación' },
 ]
 
-export default function StatsSection() {
+export default function StatsSection({ content }: StatsSectionProps) {
+  const stats = DEFAULTS.map((def, i) => {
+    const n = i + 1
+    return {
+      value: content[`stat${n}_value`] ?? def.value,
+      unit: content[`stat${n}_unit`] ?? def.unit,
+      label: content[`stat${n}_label`] ?? def.label,
+    }
+  })
+
   return (
     <div className="bg-dark-olive">
       <div className="container-custom">

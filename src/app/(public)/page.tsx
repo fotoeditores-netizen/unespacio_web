@@ -6,15 +6,21 @@ import ServicesPreview from '@/components/home/ServicesPreview'
 import QuoteBanner from '@/components/home/QuoteBanner'
 import InstagramSection from '@/components/home/InstagramSection'
 import CTASection from '@/components/home/CTASection'
+import { getContentBySeccion } from '@/lib/content'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [heroContent, statsContent] = await Promise.all([
+    getContentBySeccion('hero'),
+    getContentBySeccion('stats'),
+  ])
+
   return (
     <>
       {/* 01 — Hero: imagen real a pantalla completa, texto editorial bottom-left */}
-      <HeroSection />
+      <HeroSection content={heroContent} />
 
       {/* Banda de estadísticas — credenciales inmediatas post-hero */}
-      <StatsSection />
+      <StatsSection content={statsContent} />
 
       {/* 02 — Filosofía del estudio: split texto / interior Casa CEM */}
       <PhilosophySection />

@@ -1,7 +1,17 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import type { ContentMap } from '@/types/content'
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  content: ContentMap
+}
+
+export default function HeroSection({ content }: HeroSectionProps) {
+  const linea1 = content.titulo_linea1 ?? 'Diseñamos los lugares'
+  const linea2 = content.titulo_linea2 ?? 'donde ocurre la vida.'
+  const cta1 = content.cta1 ?? 'Ver Portafolio'
+  const cta2 = content.cta2 ?? 'Agendar Consulta Gratuita'
+
   return (
     <section className="relative h-screen min-h-[680px] overflow-hidden">
       {/* Imagen hero — Hospital Tatamá, pórtico de entrada */}
@@ -29,9 +39,8 @@ export default function HeroSection() {
 
           {/* Headline principal */}
           <h1 className="font-heading font-bold text-[2.6rem] leading-[1.05] md:text-6xl lg:text-7xl xl:text-[5.5rem] text-white mb-8 md:mb-10 max-w-4xl">
-            Diseñamos los lugares<br />
-            donde ocurre{' '}
-            <span className="text-cream/75 italic">la vida.</span>
+            {linea1}<br />
+            <span className="text-cream/75 italic">{linea2}</span>
           </h1>
 
           {/* CTAs */}
@@ -40,7 +49,7 @@ export default function HeroSection() {
               href="/portafolio"
               className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-dark-olive font-heading font-semibold text-xs tracking-widest uppercase transition-all duration-300 hover:bg-cream hover:-translate-y-0.5 hover:shadow-lg"
             >
-              Ver Portafolio
+              {cta1}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -49,7 +58,7 @@ export default function HeroSection() {
               href="/contacto"
               className="inline-flex items-center justify-center px-8 py-3.5 border border-white/50 text-white font-heading font-semibold text-xs tracking-widest uppercase transition-all duration-300 hover:border-white hover:bg-white/10 hover:-translate-y-0.5"
             >
-              Agendar Consulta Gratuita
+              {cta2}
             </Link>
           </div>
 
