@@ -46,15 +46,6 @@ export default function Navbar() {
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 flex-shrink-0">
-              <Image
-                src="/logosimbolo_unespacio.png"
-                alt="UnEspacio Arquitectos — logosímbolo"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
             <div className="relative h-8 w-36 flex-shrink-0">
               <Image
                 src="/logo_unespacio.png"
