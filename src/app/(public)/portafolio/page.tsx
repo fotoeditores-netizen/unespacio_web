@@ -3,6 +3,8 @@ import ProjectGrid from '@/components/portafolio/ProjectGrid'
 import Link from 'next/link'
 import { getProyectos } from '@/lib/proyectos'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Portafolio',
   description:

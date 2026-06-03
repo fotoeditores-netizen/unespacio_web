@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import ServicesList from '@/components/servicios/ServicesList'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Servicios',
   description:
