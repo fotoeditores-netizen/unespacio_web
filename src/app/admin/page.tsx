@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { getCitas } from '@/lib/citas'
 import { getProyectos } from '@/lib/proyectos'
 import { getEquipo } from '@/lib/equipo'
-import { cerrarSesion } from '@/actions/auth'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Dashboard | UnEspacio Admin' }
@@ -68,32 +67,11 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-[#2D2F1E] border-b-4 border-[#787A68]">
-        <div className="max-w-5xl mx-auto px-6 py-8 flex items-end justify-between">
-          <div>
-            <p className="text-[#787A68] text-xs font-semibold tracking-widest uppercase font-['Montserrat'] mb-2">
-              Panel de administración
-            </p>
-            <h1 className="text-white text-3xl font-bold font-['Montserrat'] leading-tight">
-              UnEspacio Arquitectos
-            </h1>
-            <p className="text-white/50 text-sm mt-1">
-              Gestiona el contenido de tu sitio web desde aquí.
-            </p>
-          </div>
-          <form action={cerrarSesion}>
-            <button
-              type="submit"
-              className="text-xs text-white/50 hover:text-white border border-white/20 hover:border-white/40 px-4 py-2 transition-colors"
-            >
-              Cerrar sesión
-            </button>
-          </form>
+      <div className="max-w-4xl mx-auto px-6 py-10">
+        <div className="mb-8">
+          <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 font-['Montserrat'] mb-1">Bienvenido</p>
+          <h1 className="text-2xl font-bold text-gray-900 font-['Montserrat']">Dashboard</h1>
         </div>
-      </div>
-
-      <div className="max-w-5xl mx-auto px-6 py-10">
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">

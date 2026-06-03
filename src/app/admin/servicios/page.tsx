@@ -17,7 +17,6 @@ export default async function AdminServiciosPage() {
             <h1 className="text-2xl font-bold text-gray-900">Servicios</h1>
             <p className="text-sm text-gray-500 mt-1">{servicios.length} servicio{servicios.length !== 1 ? 's' : ''}</p>
           </div>
-          <Link href="/admin/citas" className="text-xs text-gray-500 border border-gray-300 px-3 py-2 hover:bg-gray-100 transition-colors">← Citas</Link>
         </div>
 
         <div className="bg-white border border-gray-200 overflow-x-auto">

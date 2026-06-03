@@ -17,10 +17,7 @@ export default async function AdminEquipoPage() {
             <h1 className="text-2xl font-bold text-gray-900">Equipo</h1>
             <p className="text-sm text-gray-500 mt-1">{equipo.length} miembro{equipo.length !== 1 ? 's' : ''}</p>
           </div>
-          <div className="flex gap-3">
-            <Link href="/admin/citas" className="text-xs text-gray-500 border border-gray-300 px-3 py-2 hover:bg-gray-100 transition-colors">← Citas</Link>
-            <Link href="/admin/equipo/nuevo" className="text-xs bg-gray-900 text-white px-4 py-2 hover:bg-gray-700 transition-colors font-semibold uppercase tracking-wide">+ Nuevo miembro</Link>
-          </div>
+          <Link href="/admin/equipo/nuevo" className="text-xs bg-gray-900 text-white px-4 py-2 hover:bg-gray-700 transition-colors font-semibold uppercase tracking-wide">+ Nuevo miembro</Link>
         </div>
 
         <div className="space-y-3">
