@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useTransition } from 'react'
+import { useState, useEffect, useTransition, useCallback } from 'react'
 import CalendarioMensual from './CalendarioMensual'
 import SelectorHora from './SelectorHora'
 import { agendarCitaAction, obtenerDisponibilidadAction } from '@/actions/agendarCita'
@@ -29,7 +29,7 @@ export default function PopupAgendamiento({ onCerrar }: Props) {
   const [cargandoHoras, setCargandoHoras] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
-
+  const [confirmandoCierre, setConfirmandoCierre] = useState(false)
   const [form, setForm] = useState({
     nombre: '',
     correo: '',
@@ -37,6 +37,14 @@ export default function PopupAgendamiento({ onCerrar }: Props) {
     tipo_consulta: 'Consulta inicial' as TipoConsulta,
     mensaje: '',
   })
+
+  const hayDatos = fecha !== null || form.nombre !== '' || form.correo !== ''
+
+  const intentarCerrar = useCallback(() => {
+    if (paso === 2) { onCerrar(); return }
+    if (hayDatos) { setConfirmandoCierre(true); return }
+    onCerrar()
+  }, [paso, hayDatos, onCerrar])
 
   useEffect(() => {
     if (!fecha) return
@@ -72,10 +80,7 @@ export default function PopupAgendamiento({ onCerrar }: Props) {
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-olive/60 backdrop-blur-sm"
-      onClick={(e) => { if (e.target === e.currentTarget) onCerrar() }}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-olive/60 backdrop-blur-sm">
       <div className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-olive/15 sticky top-0 bg-white z-10">
@@ -87,7 +92,7 @@ export default function PopupAgendamiento({ onCerrar }: Props) {
               {PASOS[paso]}
             </p>
           </div>
-          <button onClick={onCerrar} className="text-dark-olive/40 hover:text-dark-olive transition-colors text-2xl leading-none" aria-label="Cerrar">
+          <button onClick={intentarCerrar} className="text-dark-olive/40 hover:text-dark-olive transition-colors text-2xl leading-none" aria-label="Cerrar">
             ×
           </button>
         </div>
@@ -269,6 +274,30 @@ export default function PopupAgendamiento({ onCerrar }: Props) {
           )}
         </div>
       </div>
+
+      {/* Modal confirmación de cierre */}
+      {confirmandoCierre && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-dark-olive/40">
+          <div className="bg-white p-6 max-w-sm w-full shadow-xl">
+            <p className="font-heading font-bold text-dark-olive text-base mb-2">¿Salir del formulario?</p>
+            <p className="font-sans text-sm text-olive mb-6">Perderás los datos ingresados si cierras ahora.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmandoCierre(false)}
+                className="flex-1 border border-olive/30 text-dark-olive font-heading font-semibold text-xs tracking-widest uppercase py-3 hover:bg-cream transition-colors"
+              >
+                Continuar
+              </button>
+              <button
+                onClick={onCerrar}
+                className="flex-1 bg-dark-olive text-white font-heading font-semibold text-xs tracking-widest uppercase py-3 hover:bg-olive transition-colors"
+              >
+                Salir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
