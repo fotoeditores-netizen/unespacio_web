@@ -81,9 +81,9 @@ export default function PopupAgendamiento({ onCerrar }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-olive/60 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+      <div className="bg-white w-full max-w-2xl shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-olive/15 sticky top-0 bg-white z-10">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-olive/15">
           <div>
             <p className="font-heading font-semibold text-xs tracking-widest uppercase text-olive">
               Agendar cita
@@ -106,118 +106,132 @@ export default function PopupAgendamiento({ onCerrar }: Props) {
           </div>
         )}
 
-        <div className="px-6 py-6 flex-1">
-          {/* PASO 0: Calendario + hora */}
+        <div className="px-6 py-5 flex-1">
+          {/* PASO 0: Calendario + hora en dos columnas */}
           {paso === 0 && (
-            <div className="space-y-6">
-              <CalendarioMensual fechaSeleccionada={fecha} onSeleccionar={setFecha} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Columna izquierda: calendario */}
+              <div>
+                <CalendarioMensual fechaSeleccionada={fecha} onSeleccionar={setFecha} />
+              </div>
 
-              {fecha && (
+              {/* Columna derecha: horarios + botón */}
+              <div className="flex flex-col justify-between gap-4">
                 <div>
                   <p className="font-heading font-semibold text-xs tracking-widest uppercase text-olive mb-3">
-                    Horarios disponibles
+                    {fecha ? 'Horarios disponibles' : 'Selecciona una fecha'}
                   </p>
-                  <SelectorHora
-                    horasDisponibles={horasDisponibles}
-                    horaSeleccionada={hora}
-                    onSeleccionar={setHora}
-                    cargando={cargandoHoras}
-                  />
+                  {fecha ? (
+                    <SelectorHora
+                      horasDisponibles={horasDisponibles}
+                      horaSeleccionada={hora}
+                      onSeleccionar={setHora}
+                      cargando={cargandoHoras}
+                    />
+                  ) : (
+                    <p className="font-sans text-xs text-olive/50">
+                      Elige un día del calendario para ver los horarios disponibles.
+                    </p>
+                  )}
                 </div>
-              )}
-
-              <button
-                onClick={handleSiguiente}
-                disabled={!fecha || !hora}
-                className="w-full bg-dark-olive text-white font-heading font-semibold text-xs tracking-widest uppercase py-3.5 disabled:opacity-40 hover:bg-olive transition-colors"
-              >
-                Continuar →
-              </button>
+                <button
+                  onClick={handleSiguiente}
+                  disabled={!fecha || !hora}
+                  className="w-full bg-dark-olive text-white font-heading font-semibold text-xs tracking-widest uppercase py-3.5 disabled:opacity-40 hover:bg-olive transition-colors"
+                >
+                  Continuar →
+                </button>
+              </div>
             </div>
           )}
 
-          {/* PASO 1: Formulario */}
+          {/* PASO 1: Formulario compacto en 2 columnas */}
           {paso === 1 && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {/* Resumen fecha/hora */}
-              <div className="bg-cream px-4 py-3 mb-2">
+              <div className="bg-cream px-4 py-2.5 mb-1">
                 <p className="font-sans text-xs text-olive/70">Cita seleccionada</p>
                 <p className="font-heading font-semibold text-sm text-dark-olive mt-0.5">
                   {fecha && formatearFechaVisible(fecha)} · {hora}
                 </p>
               </div>
 
-              <div>
-                <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1.5">
-                  Nombre completo *
-                </label>
-                <input
-                  type="text"
-                  name="nombre"
-                  required
-                  value={form.nombre}
-                  onChange={handleChange}
-                  className="w-full border border-olive/30 px-3 py-2.5 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white"
-                  placeholder="Laura García"
-                />
+              {/* Nombre + Teléfono */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1">
+                    Nombre *
+                  </label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    required
+                    value={form.nombre}
+                    onChange={handleChange}
+                    className="w-full border border-olive/30 px-3 py-2 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white"
+                    placeholder="Laura García"
+                  />
+                </div>
+                <div>
+                  <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1">
+                    Teléfono *
+                  </label>
+                  <input
+                    type="tel"
+                    name="telefono"
+                    required
+                    value={form.telefono}
+                    onChange={handleChange}
+                    className="w-full border border-olive/30 px-3 py-2 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white"
+                    placeholder="+57 300 000 0000"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1.5">
-                  Correo electrónico *
-                </label>
-                <input
-                  type="email"
-                  name="correo"
-                  required
-                  value={form.correo}
-                  onChange={handleChange}
-                  className="w-full border border-olive/30 px-3 py-2.5 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white"
-                  placeholder="laura@ejemplo.com"
-                />
+              {/* Correo + Tipo */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1">
+                    Correo *
+                  </label>
+                  <input
+                    type="email"
+                    name="correo"
+                    required
+                    value={form.correo}
+                    onChange={handleChange}
+                    className="w-full border border-olive/30 px-3 py-2 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white"
+                    placeholder="laura@ejemplo.com"
+                  />
+                </div>
+                <div>
+                  <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1">
+                    Tipo de consulta *
+                  </label>
+                  <select
+                    name="tipo_consulta"
+                    value={form.tipo_consulta}
+                    onChange={handleChange}
+                    className="w-full border border-olive/30 px-3 py-2 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white"
+                  >
+                    {TIPOS_CONSULTA.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
+              {/* Mensaje */}
               <div>
-                <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1.5">
-                  Teléfono *
-                </label>
-                <input
-                  type="tel"
-                  name="telefono"
-                  required
-                  value={form.telefono}
-                  onChange={handleChange}
-                  className="w-full border border-olive/30 px-3 py-2.5 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white"
-                  placeholder="+57 300 000 0000"
-                />
-              </div>
-
-              <div>
-                <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1.5">
-                  Tipo de consulta *
-                </label>
-                <select
-                  name="tipo_consulta"
-                  value={form.tipo_consulta}
-                  onChange={handleChange}
-                  className="w-full border border-olive/30 px-3 py-2.5 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white"
-                >
-                  {TIPOS_CONSULTA.map((t) => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1.5">
+                <label className="block font-heading font-semibold text-xs tracking-wide text-dark-olive/70 mb-1">
                   Mensaje (opcional)
                 </label>
                 <textarea
                   name="mensaje"
                   value={form.mensaje}
                   onChange={handleChange}
-                  rows={3}
-                  className="w-full border border-olive/30 px-3 py-2.5 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white resize-none"
+                  rows={2}
+                  className="w-full border border-olive/30 px-3 py-2 text-sm font-sans text-dark-olive focus:outline-none focus:border-olive bg-white resize-none"
                   placeholder="Cuéntanos brevemente sobre tu proyecto..."
                 />
               </div>
@@ -226,17 +240,17 @@ export default function PopupAgendamiento({ onCerrar }: Props) {
                 <p className="text-red-600 text-xs font-sans bg-red-50 px-3 py-2">{error}</p>
               )}
 
-              <div className="flex gap-3 pt-2">
+              <div className="flex gap-3 pt-1">
                 <button
                   onClick={() => setPaso(0)}
-                  className="flex-1 border border-olive/30 text-dark-olive font-heading font-semibold text-xs tracking-widest uppercase py-3.5 hover:bg-cream transition-colors"
+                  className="flex-1 border border-olive/30 text-dark-olive font-heading font-semibold text-xs tracking-widest uppercase py-3 hover:bg-cream transition-colors"
                 >
                   ← Volver
                 </button>
                 <button
                   onClick={handleConfirmar}
                   disabled={isPending || !form.nombre || !form.correo || !form.telefono}
-                  className="flex-1 bg-dark-olive text-white font-heading font-semibold text-xs tracking-widest uppercase py-3.5 disabled:opacity-40 hover:bg-olive transition-colors"
+                  className="flex-1 bg-dark-olive text-white font-heading font-semibold text-xs tracking-widest uppercase py-3 disabled:opacity-40 hover:bg-olive transition-colors"
                 >
                   {isPending ? 'Agendando...' : 'Confirmar cita'}
                 </button>
