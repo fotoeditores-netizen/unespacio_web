@@ -1,5 +1,6 @@
 import { getCitas } from '@/lib/citas'
 import TablaCitas from '@/components/admin/TablaCitas'
+import { cerrarSesion } from '@/actions/auth'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Admin — Citas | UnEspacio' }
@@ -28,9 +29,19 @@ export default async function AdminCitasPage({ searchParams }: Props) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-5xl mx-auto px-4 py-10">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Panel de citas</h1>
-          <p className="text-sm text-gray-500 mt-1">UnEspacio Arquitectos</p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Panel de citas</h1>
+            <p className="text-sm text-gray-500 mt-1">UnEspacio Arquitectos</p>
+          </div>
+          <form action={cerrarSesion}>
+            <button
+              type="submit"
+              className="text-xs text-gray-500 border border-gray-300 px-3 py-2 hover:bg-gray-100 transition-colors"
+            >
+              Cerrar sesión
+            </button>
+          </form>
         </div>
 
         {/* Contadores */}

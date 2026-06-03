@@ -1,32 +1,45 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   if (!request.nextUrl.pathname.startsWith('/admin')) {
     return NextResponse.next()
   }
 
-  const adminUser = process.env.ADMIN_USER ?? 'admin'
-  const adminPass = process.env.ADMIN_PASS ?? 'unespacio2024'
-
-  const auth = request.headers.get('authorization')
-  if (auth) {
-    const [scheme, encoded] = auth.split(' ')
-    if (scheme === 'Basic' && encoded) {
-      const decoded = Buffer.from(encoded, 'base64').toString('utf-8')
-      const [user, pass] = decoded.split(':')
-      if (user === adminUser && pass === adminPass) {
-        return NextResponse.next()
-      }
-    }
+  // Permitir acceso a la página de login sin sesión
+  if (request.nextUrl.pathname === '/admin/login') {
+    return NextResponse.next()
   }
 
-  return new NextResponse('Acceso restringido', {
-    status: 401,
-    headers: {
-      'WWW-Authenticate': 'Basic realm="UnEspacio Admin"',
-    },
-  })
+  const response = NextResponse.next()
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            request.cookies.set(name, value)
+            response.cookies.set(name, value, options)
+          })
+        },
+      },
+    }
+  )
+
+  const { data: { session } } = await supabase.auth.getSession()
+
+  if (!session) {
+    const loginUrl = new URL('/admin/login', request.url)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  return response
 }
 
 export const config = {
