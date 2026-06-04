@@ -1,6 +1,7 @@
 'use client'
 
 import ImageUploader from '@/components/admin/ImageUploader'
+import RichTextEditor from '@/components/admin/RichTextEditor'
 import type { BloqueImagenTexto } from '@/types/paginas'
 
 interface Props {
@@ -41,13 +42,11 @@ export default function BloqueImagenTextoEditor({ contenido, onChange }: Props) 
         />
       </div>
       <div>
-        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Párrafo</label>
-        <textarea
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Texto</label>
+        <RichTextEditor
           value={contenido.parrafo}
-          onChange={e => onChange({ ...contenido, parrafo: e.target.value })}
+          onChange={html => onChange({ ...contenido, parrafo: html })}
           placeholder="Texto descriptivo..."
-          rows={4}
-          className="w-full border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1a1a1a] resize-y"
         />
       </div>
     </div>
