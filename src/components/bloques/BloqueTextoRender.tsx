@@ -10,7 +10,7 @@ export default function BloqueTextoRender({ contenido }: { contenido: BloqueText
           </h2>
         )}
         <div
-          className="quill-render font-sans text-base text-olive/80 leading-relaxed"
+          className="quill-render font-sans text-base text-olive/80 leading-relaxed break-words overflow-hidden"
           dangerouslySetInnerHTML={{ __html: contenido.cuerpo }}
         />
       </div>

@@ -24,12 +24,12 @@ export default function BloqueImagenTextoRender({ contenido }: { contenido: Bloq
               </div>
             )}
           </div>
-          <div>
+          <div className="min-w-0 overflow-hidden">
             <h2 className="font-heading font-bold text-3xl md:text-4xl text-dark-olive mb-6 leading-tight">
               {contenido.titulo}
             </h2>
             <div
-              className="quill-render font-sans text-base text-olive/80 leading-relaxed"
+              className="quill-render font-sans text-base text-olive/80 leading-relaxed break-words"
               dangerouslySetInnerHTML={{ __html: contenido.parrafo }}
             />
           </div>
