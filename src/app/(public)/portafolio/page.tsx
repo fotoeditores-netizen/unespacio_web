@@ -12,8 +12,7 @@ export const metadata: Metadata = {
 }
 
 export default async function PortafolioPage() {
-  let proyectos: Awaited<ReturnType<typeof getProyectos>> = []
-  try { proyectos = await getProyectos() } catch { /* usa fallback */ }
+  const proyectos = await getProyectos()
   return (
     <>
       {/* Header */}
