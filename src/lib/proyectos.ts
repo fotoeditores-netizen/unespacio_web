@@ -23,7 +23,7 @@ export async function getProyectos(filtros?: FiltrosProyectos): Promise<Proyecto
 }
 
 export async function getProyecto(slug: string): Promise<Proyecto | null> {
-  const supabase = createClient()
+  const supabase = createServiceClient()
   const { data, error } = await supabase
     .from('proyectos')
     .select('*')
