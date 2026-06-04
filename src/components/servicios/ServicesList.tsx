@@ -125,10 +125,10 @@ export default async function ServicesList() {
           className={`${i % 2 === 0 ? 'bg-white' : 'bg-cream'}`}
         >
           <div className="container-custom">
-            <div className={`grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[560px] ${i % 2 !== 0 ? 'lg:flex lg:flex-row-reverse' : ''}`}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[560px]">
 
               {/* Imagen — sangra hasta el borde de la columna */}
-              <div className="relative min-h-[320px] lg:min-h-0 overflow-hidden">
+              <div className={`relative min-h-[320px] lg:min-h-[560px] overflow-hidden ${i % 2 !== 0 ? 'lg:order-last' : ''}`}>
                 <Image
                   src={service.image.src}
                   alt={service.image.alt}
