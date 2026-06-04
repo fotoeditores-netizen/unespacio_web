@@ -25,8 +25,8 @@ export default async function AdminDashboardPage() {
   const stats = [
     { label: 'Citas pendientes', value: citasPendientes, alert: citasPendientes > 0, suffix: '' },
     { label: 'Citas hoy', value: citasHoy, alert: false, suffix: '' },
-    { label: 'Proyectos publicados', value: proyectos.length, alert: false, suffix: '' },
-    { label: 'Proyectos destacados', value: proyectosDestacados, alert: proyectosDestacados < 3, suffix: '/3 mín.' },
+    { label: 'Portafolio publicado', value: proyectos.length, alert: false, suffix: '' },
+    { label: 'Portafolio destacado', value: proyectosDestacados, alert: proyectosDestacados < 3, suffix: '/3 mín.' },
   ]
 
   const modules = [
@@ -42,10 +42,10 @@ export default async function AdminDashboardPage() {
     {
       href: '/admin/proyectos',
       icon: '🏛️',
-      title: 'Proyectos',
+      title: 'Portafolio',
       description: 'Publica nuevos proyectos, sube fotos, organiza el portafolio y marca proyectos como destacados en inicio.',
       badge: null,
-      cta: 'Ver proyectos →',
+      cta: 'Ver portafolio →',
     },
     {
       href: '/admin/equipo',

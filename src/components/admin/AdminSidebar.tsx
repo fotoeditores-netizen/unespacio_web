@@ -23,7 +23,7 @@ const NAV: { section: string; items: NavItem[] }[] = [
     section: 'Contenido',
     items: [
       { href: '/admin/citas', label: 'Citas', icon: '📅', exact: false },
-      { href: '/admin/proyectos', label: 'Proyectos', icon: '🏛️', exact: false },
+      { href: '/admin/proyectos', label: 'Portafolio', icon: '🏛️', exact: false },
       { href: '/admin/equipo', label: 'Equipo', icon: '👤', exact: false },
       { href: '/admin/servicios', label: 'Servicios', icon: '📋', exact: false },
       { href: '/admin/contenido', label: 'Contenido', icon: '✏️', exact: false },
