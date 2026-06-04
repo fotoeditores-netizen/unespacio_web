@@ -34,7 +34,7 @@ export default function ProyectoForm({ proyecto }: Props) {
     tipologia: proyecto?.tipologia ?? 'residencial' as Tipologia,
     descripcion_corta: proyecto?.descripcion_corta ?? '',
     descripcion_larga: proyecto?.descripcion_larga ?? '',
-    imagenes: proyecto?.imagenes ?? [] as string[],
+    imagenes: (proyecto?.imagenes?.length ? proyecto.imagenes : proyecto?.imagen_portada ? [proyecto.imagen_portada] : []) as string[],
     imagen_portada: proyecto?.imagen_portada ?? '',
     area_m2: proyecto?.area_m2 ?? null as number | null,
     anio: proyecto?.anio ?? null as number | null,
