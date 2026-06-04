@@ -168,14 +168,8 @@ function DropdownItem({ item, dark, pathname }: { item: MenuItemConHijos; dark: 
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-52 bg-white shadow-xl rounded border border-gray-100 py-1 z-50">
-          <Link
-            href={item.url}
-            className="block px-4 py-2.5 text-xs font-heading font-semibold tracking-widest uppercase text-dark-olive hover:bg-cream hover:text-olive transition-colors"
-          >
-            {item.label}
-          </Link>
-          <div className="border-t border-gray-100 my-1" />
+        <div className="absolute top-full left-0 pt-2 w-52 z-50">
+          <div className="bg-white shadow-xl rounded border border-gray-100 py-1">
           {item.hijos.map(hijo => (
             <Link
               key={hijo.id}
@@ -187,6 +181,7 @@ function DropdownItem({ item, dark, pathname }: { item: MenuItemConHijos; dark: 
               {hijo.label}
             </Link>
           ))}
+          </div>
         </div>
       )}
     </div>
