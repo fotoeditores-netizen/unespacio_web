@@ -29,14 +29,7 @@ export default function BloqueImagenTextoRender({ contenido }: { contenido: Bloq
               {contenido.titulo}
             </h2>
             <div
-              className="font-sans text-base text-olive/80 leading-relaxed
-                [&_strong]:font-semibold [&_strong]:text-dark-olive
-                [&_em]:italic [&_u]:underline [&_s]:line-through
-                [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1
-                [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1
-                [&_a]:text-olive [&_a]:underline [&_a]:hover:text-dark-olive
-                [&_p]:mb-4 [&_p:last-child]:mb-0
-                [&_.text-center]:text-center [&_.text-right]:text-right"
+              className="quill-render font-sans text-base text-olive/80 leading-relaxed"
               dangerouslySetInnerHTML={{ __html: contenido.parrafo }}
             />
           </div>

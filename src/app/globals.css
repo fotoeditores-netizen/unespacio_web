@@ -60,6 +60,28 @@
   }
 }
 
+/* Estilos para contenido generado por Quill en el sitio público */
+.quill-render h1 { @apply font-heading font-bold text-3xl text-dark-olive mt-6 mb-3 leading-tight; }
+.quill-render h2 { @apply font-heading font-bold text-2xl text-dark-olive mt-5 mb-3 leading-tight; }
+.quill-render h3 { @apply font-heading font-bold text-xl text-dark-olive mt-4 mb-2 leading-tight; }
+.quill-render h4 { @apply font-heading font-semibold text-lg text-dark-olive mt-3 mb-2; }
+.quill-render p { @apply mb-4; }
+.quill-render p:last-child { @apply mb-0; }
+.quill-render strong { @apply font-semibold text-dark-olive; }
+.quill-render em { @apply italic; }
+.quill-render u { @apply underline; }
+.quill-render s { @apply line-through; }
+.quill-render ul { @apply list-disc pl-5 mb-4 space-y-1; }
+.quill-render ol { @apply list-decimal pl-5 mb-4 space-y-1; }
+.quill-render a { @apply underline text-olive hover:text-dark-olive transition-colors; }
+.quill-render blockquote { @apply border-l-4 border-olive pl-4 italic text-olive/70 my-4; }
+.quill-render .ql-align-center { @apply text-center; }
+.quill-render .ql-align-right { @apply text-right; }
+.quill-render .ql-align-justify { @apply text-justify; }
+.quill-render .ql-size-small { font-size: 0.85em; }
+.quill-render .ql-size-large { font-size: 1.4em; }
+.quill-render .ql-size-huge { font-size: 1.8em; }
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
