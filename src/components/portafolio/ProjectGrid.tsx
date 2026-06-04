@@ -18,16 +18,16 @@ const categoryColors: Record<string, string> = {
 
 // Proyectos hardcodeados como fallback mientras no haya datos en Supabase
 const FALLBACK_PROJECTS = [
-  { id: '1', titulo: 'Hospital Tatamá', tipologia: 'salud' as Tipologia, area_m2: 41000, anio: 2023, imagen_portada: '/fotos/hospital-tatama.jpg', descripcion_corta: '', slug: '' },
-  { id: '2', titulo: 'CDI Pasacaballos', tipologia: 'educativa' as Tipologia, area_m2: 320, anio: 2022, imagen_portada: '/fotos/proyecto-cdi.jpg', descripcion_corta: '', slug: '' },
-  { id: '3', titulo: 'Centro de Idiomas EAFIT', tipologia: 'corporativa' as Tipologia, area_m2: 4800, anio: 2022, imagen_portada: '/fotos/proyecto-centro-idiomas.jpg', descripcion_corta: '', slug: '' },
-  { id: '4', titulo: 'Facultad de Artes', tipologia: 'cultural' as Tipologia, area_m2: 3200, anio: 2023, imagen_portada: '/fotos/proyecto-facultad-artes.jpg', descripcion_corta: '', slug: '' },
-  { id: '5', titulo: 'Casa CEM', tipologia: 'residencial' as Tipologia, area_m2: 480, anio: 2024, imagen_portada: '/fotos/casa-cem2.jpg', descripcion_corta: '', slug: '' },
-  { id: '6', titulo: 'Casa CEL', tipologia: 'residencial' as Tipologia, area_m2: 320, anio: 2023, imagen_portada: '/fotos/proyecto-casa-cel.jpg', descripcion_corta: '', slug: '' },
-  { id: '7', titulo: 'Casa CLE', tipologia: 'residencial' as Tipologia, area_m2: 650, anio: 2022, imagen_portada: '/fotos/servicio-residencial.jpg', descripcion_corta: '', slug: '' },
-  { id: '8', titulo: 'Restaurante', tipologia: 'comercial' as Tipologia, area_m2: 280, anio: 2023, imagen_portada: '/fotos/servicio-comercial.jpg', descripcion_corta: '', slug: '' },
-  { id: '9', titulo: 'Concurso Ambientes Educativos', tipologia: 'educativa' as Tipologia, area_m2: 2400, anio: 2021, imagen_portada: '/fotos/quote-educativo.jpg', descripcion_corta: '', slug: '' },
-  { id: '10', titulo: 'Concurso Colegio', tipologia: 'educativa' as Tipologia, area_m2: 1800, anio: 2021, imagen_portada: '/fotos/concurso-colegio.jpg', descripcion_corta: '', slug: '' },
+  { id: '1', titulo: 'Hospital Tatamá', tipologia: 'salud' as Tipologia, area_m2: 41000, anio: 2023, imagen_portada: '/fotos/hospital-tatama.jpg', descripcion_corta: '', slug: 'hospital-tatama' },
+  { id: '2', titulo: 'CDI Pasacaballos', tipologia: 'educativa' as Tipologia, area_m2: 320, anio: 2022, imagen_portada: '/fotos/proyecto-cdi.jpg', descripcion_corta: '', slug: 'cdi-pasacaballos' },
+  { id: '3', titulo: 'Centro de Idiomas EAFIT', tipologia: 'corporativa' as Tipologia, area_m2: 4800, anio: 2022, imagen_portada: '/fotos/proyecto-centro-idiomas.jpg', descripcion_corta: '', slug: 'centro-idiomas-eafit' },
+  { id: '4', titulo: 'Facultad de Artes', tipologia: 'cultural' as Tipologia, area_m2: 3200, anio: 2023, imagen_portada: '/fotos/proyecto-facultad-artes.jpg', descripcion_corta: '', slug: 'facultad-de-artes' },
+  { id: '5', titulo: 'Casa CEM', tipologia: 'residencial' as Tipologia, area_m2: 480, anio: 2024, imagen_portada: '/fotos/casa-cem2.jpg', descripcion_corta: '', slug: 'casa-cem' },
+  { id: '6', titulo: 'Casa CEL', tipologia: 'residencial' as Tipologia, area_m2: 320, anio: 2023, imagen_portada: '/fotos/proyecto-casa-cel.jpg', descripcion_corta: '', slug: 'casa-cel' },
+  { id: '7', titulo: 'Casa CLE', tipologia: 'residencial' as Tipologia, area_m2: 650, anio: 2022, imagen_portada: '/fotos/servicio-residencial.jpg', descripcion_corta: '', slug: 'casa-cle' },
+  { id: '8', titulo: 'Restaurante', tipologia: 'comercial' as Tipologia, area_m2: 280, anio: 2023, imagen_portada: '/fotos/servicio-comercial.jpg', descripcion_corta: '', slug: 'restaurante' },
+  { id: '9', titulo: 'Concurso Ambientes Educativos', tipologia: 'educativa' as Tipologia, area_m2: 2400, anio: 2021, imagen_portada: '/fotos/quote-educativo.jpg', descripcion_corta: '', slug: 'concurso-ambientes-educativos' },
+  { id: '10', titulo: 'Concurso Colegio', tipologia: 'educativa' as Tipologia, area_m2: 1800, anio: 2021, imagen_portada: '/fotos/concurso-colegio.jpg', descripcion_corta: '', slug: 'concurso-colegio' },
 ]
 
 interface Props {
