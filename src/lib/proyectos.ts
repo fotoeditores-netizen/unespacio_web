@@ -7,7 +7,7 @@ interface FiltrosProyectos {
 }
 
 export async function getProyectos(filtros?: FiltrosProyectos): Promise<Proyecto[]> {
-  const supabase = createClient()
+  const supabase = createServiceClient()
   let query = supabase
     .from('proyectos')
     .select('*')

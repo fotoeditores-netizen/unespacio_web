@@ -57,7 +57,7 @@ export default async function AdminProyectosPage({ searchParams }: Props) {
             <table className="w-full text-left">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  {['Proyecto', 'Tipología', 'Año', 'Área', 'Destacado', 'Acciones'].map(h => (
+                  {['Proyecto', 'Tipología', 'Año', 'Área', 'En inicio', 'Acciones'].map(h => (
                     <th key={h} className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
                   ))}
                 </tr>
