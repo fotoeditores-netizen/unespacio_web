@@ -27,6 +27,7 @@ const NAV: { section: string; items: NavItem[] }[] = [
       { href: '/admin/equipo', label: 'Equipo', icon: '👤', exact: false },
       { href: '/admin/servicios', label: 'Servicios', icon: '📋', exact: false },
       { href: '/admin/contenido', label: 'Contenido', icon: '✏️', exact: false },
+      { href: '/admin/paginas', label: 'Páginas', icon: '📄', exact: false },
     ],
   },
   {
