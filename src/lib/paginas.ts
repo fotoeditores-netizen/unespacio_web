@@ -12,28 +12,44 @@ export async function getPaginas(): Promise<Pagina[]> {
 }
 
 export async function getPaginaConBloques(slug: string): Promise<PaginaConBloques | null> {
-  const supabase = createClient()
-  const { data, error } = await supabase
+  const supabase = createServiceClient()
+
+  const { data: paginaData, error: paginaError } = await supabase
     .from('paginas')
-    .select('*, bloques(*)')
+    .select('*')
     .eq('slug', slug)
     .single()
-  if (error) return null
-  const pagina = data as PaginaConBloques
-  pagina.bloques = (pagina.bloques ?? []).sort((a: Bloque, b: Bloque) => a.orden - b.orden)
+  if (paginaError || !paginaData) return null
+
+  const { data: bloquesData } = await supabase
+    .from('bloques')
+    .select('*')
+    .eq('pagina_id', paginaData.id)
+    .order('orden', { ascending: true })
+
+  const pagina = paginaData as PaginaConBloques
+  pagina.bloques = ((bloquesData ?? []) as Bloque[])
   return pagina
 }
 
 export async function getPaginaById(id: string): Promise<PaginaConBloques | null> {
   const supabase = createServiceClient()
-  const { data, error } = await supabase
+
+  const { data: paginaData, error: paginaError } = await supabase
     .from('paginas')
-    .select('*, bloques(*)')
+    .select('*')
     .eq('id', id)
     .single()
-  if (error) return null
-  const pagina = data as PaginaConBloques
-  pagina.bloques = (pagina.bloques ?? []).sort((a: Bloque, b: Bloque) => a.orden - b.orden)
+  if (paginaError || !paginaData) return null
+
+  const { data: bloquesData } = await supabase
+    .from('bloques')
+    .select('*')
+    .eq('pagina_id', id)
+    .order('orden', { ascending: true })
+
+  const pagina = paginaData as PaginaConBloques
+  pagina.bloques = ((bloquesData ?? []) as Bloque[])
   return pagina
 }
 
