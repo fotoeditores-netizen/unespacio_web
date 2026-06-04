@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import type { Proyecto, Tipologia } from '@/types/proyectos'
 
 const categories = ['Todos', 'Educativa', 'Corporativa', 'Cultural', 'Salud', 'Comercial', 'Residencial']
@@ -67,9 +68,10 @@ export default function ProjectGrid({ proyectos }: Props) {
           const label = project.tipologia.charAt(0).toUpperCase() + project.tipologia.slice(1)
           const size = index === 0 ? 'large' : index === 2 ? 'wide' : 'normal'
           return (
-            <div
+            <Link
               key={project.id}
-              className={`group relative overflow-hidden cursor-pointer ${
+              href={project.slug ? `/portafolio/${project.slug}` : '#'}
+              className={`group relative overflow-hidden block ${
                 size === 'large' ? 'lg:col-span-1 lg:row-span-2' :
                 size === 'wide' ? 'lg:col-span-2' : ''
               }`}
@@ -103,7 +105,7 @@ export default function ProjectGrid({ proyectos }: Props) {
                   </svg>
                 </div>
               </div>
-            </div>
+            </Link>
           )
         })}
       </div>

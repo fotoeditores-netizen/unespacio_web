@@ -19,7 +19,7 @@ export default async function FeaturedProjects() {
         title: p.titulo,
         category: p.tipologia.charAt(0).toUpperCase() + p.tipologia.slice(1),
         tag: p.descripcion_corta || p.tipologia,
-        href: '/portafolio',
+        href: p.slug ? `/portafolio/${p.slug}` : '/portafolio',
         position: 'object-center',
       }))
     }
