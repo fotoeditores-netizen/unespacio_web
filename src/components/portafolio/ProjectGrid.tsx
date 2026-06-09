@@ -116,6 +116,9 @@ export default function ProjectGrid({ proyectos }: Props) {
                     {project.area_m2 ? `${project.area_m2.toLocaleString()} m²` : ''}{project.area_m2 && project.anio ? ' · ' : ''}{project.anio ?? ''}
                   </p>
                   <h3 className="font-heading font-bold text-xl text-white">{project.titulo}</h3>
+                  {project.descripcion_corta ? (
+                    <p className="font-sans text-xs text-cream/70 mt-1 leading-relaxed">{project.descripcion_corta}</p>
+                  ) : null}
                 </div>
               </button>
             )

@@ -102,6 +102,16 @@ export default function ProyectoForm({ proyecto }: Props) {
         </div>
       </div>
 
+      {/* Texto informativo del hover */}
+      <div>
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+          Texto informativo <span className="normal-case font-normal text-gray-400">(aparece al pasar el cursor sobre la imagen en el portafolio)</span>
+        </label>
+        <input name="descripcion_corta" value={form.descripcion_corta} onChange={handleChange}
+          className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500"
+          placeholder="Ej: Espacio educativo de 3.400 m² diseñado para la primera infancia" />
+      </div>
+
       {/* Tipología */}
       <div>
         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Tipología *</label>
@@ -109,14 +119,6 @@ export default function ProyectoForm({ proyecto }: Props) {
           className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500 bg-white">
           {TIPOLOGIAS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
         </select>
-      </div>
-
-      {/* Descripción corta */}
-      <div>
-        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Descripción corta</label>
-        <input name="descripcion_corta" value={form.descripcion_corta} onChange={handleChange}
-          className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500"
-          placeholder="Una línea descriptiva para el grid del portafolio" />
       </div>
 
       {/* Descripción larga */}

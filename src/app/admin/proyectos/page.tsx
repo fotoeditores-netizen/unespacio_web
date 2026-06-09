@@ -26,7 +26,7 @@ export default async function AdminProyectosPage({ searchParams }: Props) {
 
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Proyectos</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Portafolio</h1>
             <p className="text-sm text-gray-500 mt-1">{proyectos.length} proyecto{proyectos.length !== 1 ? 's' : ''}</p>
           </div>
           <Link href="/admin/proyectos/nuevo" className="text-xs bg-gray-900 text-white px-4 py-2 hover:bg-gray-700 transition-colors font-semibold uppercase tracking-wide">
