@@ -13,6 +13,7 @@ export interface Proyecto {
   tipologia: Tipologia
   descripcion_corta: string
   descripcion_larga: string
+  descripcion_hover: string
   imagenes: string[]
   imagen_portada: string
   area_m2: number | null
@@ -28,6 +29,7 @@ export interface CrearProyectoInput {
   tipologia: Tipologia
   descripcion_corta: string
   descripcion_larga: string
+  descripcion_hover: string
   imagenes: string[]
   imagen_portada: string
   area_m2: number | null

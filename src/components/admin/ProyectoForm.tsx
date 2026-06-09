@@ -34,6 +34,7 @@ export default function ProyectoForm({ proyecto }: Props) {
     tipologia: proyecto?.tipologia ?? 'residencial' as Tipologia,
     descripcion_corta: proyecto?.descripcion_corta ?? '',
     descripcion_larga: proyecto?.descripcion_larga ?? '',
+    descripcion_hover: proyecto?.descripcion_hover ?? '',
     imagenes: (proyecto?.imagenes?.length ? proyecto.imagenes : proyecto?.imagen_portada ? [proyecto.imagen_portada] : []) as string[],
     imagen_portada: proyecto?.imagen_portada ?? '',
     area_m2: proyecto?.area_m2 ?? null as number | null,
@@ -105,9 +106,19 @@ export default function ProyectoForm({ proyecto }: Props) {
       {/* Texto informativo del hover */}
       <div>
         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-          Texto informativo <span className="normal-case font-normal text-gray-400">(aparece al pasar el cursor sobre la imagen en el portafolio)</span>
+          Etiqueta <span className="normal-case font-normal text-gray-400">(badge superior al pasar el cursor sobre la imagen)</span>
         </label>
         <input name="descripcion_corta" value={form.descripcion_corta} onChange={handleChange}
+          className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500"
+          placeholder="Ej: Obra construida · Gran escala" />
+      </div>
+
+      {/* Frase descriptiva hover */}
+      <div>
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+          Frase descriptiva <span className="normal-case font-normal text-gray-400">(aparece debajo del título al pasar el cursor, en portafolio e inicio)</span>
+        </label>
+        <input name="descripcion_hover" value={form.descripcion_hover} onChange={handleChange}
           className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500"
           placeholder="Ej: Espacio educativo de 3.400 m² diseñado para la primera infancia" />
       </div>

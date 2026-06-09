@@ -3,9 +3,9 @@ import Link from 'next/link'
 import { getProyectos } from '@/lib/proyectos'
 
 const FALLBACK = [
-  { src: '/fotos/proyecto-facultad-artes.jpg', alt: 'Facultad de Artes', title: 'Facultad de Artes', category: 'Educativa · Cultural', tag: 'Obra construida', href: '/portafolio', position: 'object-center' },
-  { src: '/fotos/proyecto-casa-cel.jpg', alt: 'Casa CEL', title: 'Casa CEL', category: 'Residencial', tag: 'Diseño residencial', href: '/portafolio', position: 'object-center' },
-  { src: '/fotos/proyecto-centro-idiomas.jpg', alt: 'Centro de Idiomas EAFIT', title: 'Centro de Idiomas EAFIT', category: 'Educativa · Corporativa', tag: 'Gran escala', href: '/portafolio', position: 'object-top' },
+  { src: '/fotos/proyecto-facultad-artes.jpg', alt: 'Facultad de Artes', title: 'Facultad de Artes', category: 'Educativa · Cultural', tag: 'Obra construida', descripcion_hover: '', href: '/portafolio', position: 'object-center' },
+  { src: '/fotos/proyecto-casa-cel.jpg', alt: 'Casa CEL', title: 'Casa CEL', category: 'Residencial', tag: 'Diseño residencial', descripcion_hover: '', href: '/portafolio', position: 'object-center' },
+  { src: '/fotos/proyecto-centro-idiomas.jpg', alt: 'Centro de Idiomas EAFIT', title: 'Centro de Idiomas EAFIT', category: 'Educativa · Corporativa', tag: 'Gran escala', descripcion_hover: '', href: '/portafolio', position: 'object-top' },
 ]
 
 export default async function FeaturedProjects() {
@@ -19,6 +19,7 @@ export default async function FeaturedProjects() {
         title: p.titulo,
         category: p.tipologia.charAt(0).toUpperCase() + p.tipologia.slice(1),
         tag: p.descripcion_corta || p.tipologia,
+        descripcion_hover: p.descripcion_hover || '',
         href: '/portafolio',
         position: 'object-center',
       }))
@@ -75,8 +76,12 @@ export default async function FeaturedProjects() {
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-7 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
               <p className="font-sans text-[10px] text-cream/60 tracking-widest uppercase mb-1.5">{featured[0].category}</p>
+              <h3 className="font-heading font-bold text-2xl text-white leading-tight mb-1">{featured[0].title}</h3>
+              {featured[0].descripcion_hover ? (
+                <p className="font-sans text-xs text-cream/70 mb-2 leading-relaxed">{featured[0].descripcion_hover}</p>
+              ) : null}
               <div className="flex items-end justify-between">
-                <h3 className="font-heading font-bold text-2xl text-white leading-tight">{featured[0].title}</h3>
+                <span />
                 <svg className="w-5 h-5 text-cream/50 group-hover:text-white group-hover:translate-x-0.5 transition-all flex-shrink-0 ml-3 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -105,6 +110,9 @@ export default async function FeaturedProjects() {
                 <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                   <p className="font-sans text-[10px] text-cream/60 tracking-widest uppercase mb-1">{p.category}</p>
                   <h3 className="font-heading font-bold text-lg text-white leading-tight">{p.title}</h3>
+                  {p.descripcion_hover ? (
+                    <p className="font-sans text-xs text-cream/70 mt-1 leading-relaxed">{p.descripcion_hover}</p>
+                  ) : null}
                 </div>
               </Link>
             ))}
