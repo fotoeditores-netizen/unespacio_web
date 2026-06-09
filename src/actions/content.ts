@@ -36,3 +36,36 @@ export async function guardarContactoContent(formData: FormData) {
   await upsertContentBatch(entries)
   revalidatePath('/contacto')
 }
+
+export async function guardarNosotros(formData: FormData) {
+  const claves = ['titulo', 'parrafo1', 'parrafo2', 'cita', 'cita_autor']
+  const entries = claves.map(clave => ({
+    seccion: 'nosotros',
+    clave,
+    valor: (formData.get(clave) as string) ?? '',
+  }))
+  await upsertContentBatch(entries)
+  revalidatePath('/')
+}
+
+export async function guardarServicios(formData: FormData) {
+  const claves = ['titulo', 'subtitulo', 'proceso_titulo']
+  const entries = claves.map(clave => ({
+    seccion: 'servicios',
+    clave,
+    valor: (formData.get(clave) as string) ?? '',
+  }))
+  await upsertContentBatch(entries)
+  revalidatePath('/servicios')
+}
+
+export async function guardarPortafolio(formData: FormData) {
+  const claves = ['titulo', 'subtitulo']
+  const entries = claves.map(clave => ({
+    seccion: 'portafolio',
+    clave,
+    valor: (formData.get(clave) as string) ?? '',
+  }))
+  await upsertContentBatch(entries)
+  revalidatePath('/portafolio')
+}
