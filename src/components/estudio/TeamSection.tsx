@@ -76,7 +76,7 @@ function LauraCVContent() {
             <div>
               <p className="font-heading font-semibold text-sm text-dark-olive">Arquitecta</p>
               <p className="font-sans text-xs text-olive/80 mt-0.5">Universidad Pontificia Bolivariana</p>
-              <p className="font-sans text-xs text-olive/50 mt-0.5">2005</p>
+              <p className="font-sans text-xs text-olive/50 mt-0.5">2014</p>
             </div>
             <div>
               <p className="font-heading font-semibold text-sm text-dark-olive">Especialista en Gerencia de Proyectos</p>
@@ -92,7 +92,7 @@ function LauraCVContent() {
           <FirmRow period="2014 – 2015" firm="Entrabe Arquitectos. Bogotá" />
           <FirmRow period="2015 – 2016" firm="SOLINOFF CORP. Bogotá" />
           <FirmRow period="2016 – 2019" firm="Juan Manuel Pelaez Arquitectos. Medellín" />
-          <FirmRow period="2019 – 2022" firm="Conconcreto. Medellín — Desarrollo, Coordinación y Construcción de Proyectos" />
+          <FirmRow period="2019 – 2022" firm="Conconcreto. Medellín — Diseño, desarrollo y coordinación de proyectos" />
         </div>
       </div>
 

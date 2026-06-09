@@ -45,12 +45,12 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="mb-6">
-              <div className="relative h-12 w-44">
+              <div className="relative h-12 w-44 bg-white px-3 py-1">
                 <Image
                   src="/logo_unespacio.png"
                   alt="UnEspacio Arquitectos"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-left p-1"
                 />
               </div>
             </div>
