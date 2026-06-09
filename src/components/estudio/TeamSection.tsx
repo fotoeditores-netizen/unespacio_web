@@ -92,7 +92,7 @@ function LauraCVContent() {
           <FirmRow period="2014 – 2015" firm="Entrabe Arquitectos. Bogotá" />
           <FirmRow period="2015 – 2016" firm="SOLINOFF CORP. Bogotá" />
           <FirmRow period="2016 – 2019" firm="Juan Manuel Pelaez Arquitectos. Medellín" />
-          <FirmRow period="2019 – 2022" firm="Conconcreto. Medellín — Diseño, desarrollo y coordinación de proyectos" />
+          <FirmRow period="2019 – 2022" firm="Diseño, desarrollo y coordinación de proyectos" />
         </div>
       </div>
 
