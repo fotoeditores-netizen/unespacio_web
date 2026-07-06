@@ -48,6 +48,23 @@ export async function POST(req: NextRequest) {
   const { accion, email, role, user_id } = body
   const service = createServiceClient()
 
+  if (accion === 'crear') {
+    const { password, nombre } = body
+    if (!email || !role || !password) return NextResponse.json({ error: 'Email, contraseña y rol requeridos' }, { status: 400 })
+    if (password.length < 8) return NextResponse.json({ error: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 })
+
+    const { data, error } = await service.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: { nombre: nombre ?? '' },
+    })
+    if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+
+    await service.from('user_roles').upsert({ user_id: data.user.id, role }, { onConflict: 'user_id' })
+    return NextResponse.json({ ok: true })
+  }
+
   if (accion === 'invitar') {
     if (!email || !role) return NextResponse.json({ error: 'Email y rol requeridos' }, { status: 400 })
 

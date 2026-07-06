@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 
 type Rol = 'superadmin' | 'admin' | 'editor'
+type Modo = 'crear' | 'invitar'
 
 interface Usuario {
   id: string
@@ -37,11 +38,15 @@ export default function UsuariosPage() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Formulario invitación
+  // Formulario
+  const [modo, setModo] = useState<Modo>('crear')
   const [email, setEmail] = useState('')
+  const [nombre, setNombre] = useState('')
+  const [password, setPassword] = useState('')
+  const [mostrarPass, setMostrarPass] = useState(false)
   const [rolNuevo, setRolNuevo] = useState<Rol>('editor')
   const [enviando, setEnviando] = useState(false)
-  const [msgInvitacion, setMsgInvitacion] = useState<string | null>(null)
+  const [msg, setMsg] = useState<string | null>(null)
 
   async function cargarUsuarios() {
     setCargando(true)
@@ -60,21 +65,38 @@ export default function UsuariosPage() {
 
   useEffect(() => { cargarUsuarios() }, [])
 
-  async function invitar(e: React.FormEvent) {
+  function resetForm() {
+    setEmail('')
+    setNombre('')
+    setPassword('')
+    setRolNuevo('editor')
+    setMsg(null)
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setEnviando(true)
-    setMsgInvitacion(null)
+    setMsg(null)
+
+    const body = modo === 'crear'
+      ? { accion: 'crear', email, nombre, password, role: rolNuevo }
+      : { accion: 'invitar', email, role: rolNuevo }
+
     const res = await fetch('/api/admin/usuarios', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ accion: 'invitar', email, role: rolNuevo }),
+      body: JSON.stringify(body),
     })
     const d = await res.json()
+
     if (!res.ok) {
-      setMsgInvitacion(`Error: ${d.error}`)
+      setMsg(`Error: ${d.error}`)
     } else {
-      setMsgInvitacion(`Invitación enviada a ${email}`)
-      setEmail('')
+      setMsg(modo === 'crear'
+        ? `Usuario ${email} creado correctamente.`
+        : `Invitación enviada a ${email}.`
+      )
+      resetForm()
       cargarUsuarios()
     }
     setEnviando(false)
@@ -106,43 +128,115 @@ export default function UsuariosPage() {
         <p className="text-sm text-gray-500">Gestiona quién tiene acceso al panel de administración.</p>
       </div>
 
-      {/* Invitar usuario */}
+      {/* Formulario nuevo usuario */}
       <div className="bg-white border border-gray-200 p-6 mb-8">
-        <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">Invitar nuevo usuario</h2>
-        <form onSubmit={invitar} className="flex flex-col sm:flex-row gap-3">
-          <input
-            type="email"
-            required
-            placeholder="correo@ejemplo.com"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            className="flex-1 border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500"
-          />
-          <select
-            value={rolNuevo}
-            onChange={e => setRolNuevo(e.target.value as Rol)}
-            className="border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500"
-          >
-            {ROLES.map(r => (
-              <option key={r.value} value={r.value}>{r.label}</option>
-            ))}
-          </select>
+        <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">Agregar usuario</h2>
+
+        {/* Selector de modo */}
+        <div className="flex gap-1 mb-5 bg-gray-100 p-1 w-fit">
           <button
-            type="submit"
-            disabled={enviando}
-            className="bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-5 py-2 hover:bg-gray-700 transition-colors disabled:opacity-50"
+            type="button"
+            onClick={() => { setModo('crear'); setMsg(null) }}
+            className={`px-4 py-1.5 text-xs font-semibold transition-colors ${modo === 'crear' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
           >
-            {enviando ? 'Enviando...' : 'Invitar'}
+            Crear con contraseña
           </button>
+          <button
+            type="button"
+            onClick={() => { setModo('invitar'); setMsg(null) }}
+            className={`px-4 py-1.5 text-xs font-semibold transition-colors ${modo === 'invitar' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+          >
+            Invitar por email
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          {modo === 'crear' && (
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                Nombre (opcional)
+              </label>
+              <input
+                type="text"
+                placeholder="Ej: Laura Maya"
+                value={nombre}
+                onChange={e => setNombre(e.target.value)}
+                className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500"
+              />
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="email"
+              required
+              placeholder="correo@ejemplo.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="flex-1 border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500"
+            />
+            <select
+              value={rolNuevo}
+              onChange={e => setRolNuevo(e.target.value as Rol)}
+              className="border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500"
+            >
+              {ROLES.map(r => (
+                <option key={r.value} value={r.value}>{r.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {modo === 'crear' && (
+            <div className="relative">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                Contraseña (mínimo 8 caracteres)
+              </label>
+              <div className="relative">
+                <input
+                  type={mostrarPass ? 'text' : 'password'}
+                  required
+                  placeholder="Contraseña segura"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  minLength={8}
+                  className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-gray-500 pr-20"
+                />
+                <button
+                  type="button"
+                  onClick={() => setMostrarPass(!mostrarPass)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-gray-600"
+                >
+                  {mostrarPass ? 'Ocultar' : 'Mostrar'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center gap-3 pt-1">
+            <button
+              type="submit"
+              disabled={enviando}
+              className="bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-5 py-2.5 hover:bg-gray-700 transition-colors disabled:opacity-50"
+            >
+              {enviando
+                ? (modo === 'crear' ? 'Creando...' : 'Enviando...')
+                : (modo === 'crear' ? 'Crear usuario' : 'Enviar invitación')
+              }
+            </button>
+            {modo === 'invitar' && (
+              <p className="text-xs text-gray-400">El usuario recibirá un email para crear su contraseña.</p>
+            )}
+          </div>
         </form>
-        {msgInvitacion && (
-          <p className={`mt-3 text-xs px-3 py-2 ${msgInvitacion.startsWith('Error') ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-700'}`}>
-            {msgInvitacion}
+
+        {msg && (
+          <p className={`mt-3 text-xs px-3 py-2 ${msg.startsWith('Error') ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-700'}`}>
+            {msg}
           </p>
         )}
 
         {/* Descripción de roles */}
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <div className="mt-5 pt-4 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-3 gap-2">
           {ROLES.map(r => (
             <div key={r.value} className="flex items-start gap-2 text-xs text-gray-500">
               <span className={`px-1.5 py-0.5 text-[10px] font-semibold rounded ${ROL_COLORS[r.value]} flex-shrink-0 mt-0.5`}>{r.label}</span>
@@ -154,8 +248,9 @@ export default function UsuariosPage() {
 
       {/* Lista de usuarios */}
       <div className="bg-white border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-100">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Usuarios con acceso</h2>
+          <span className="text-xs text-gray-400">{usuarios.length} usuario{usuarios.length !== 1 ? 's' : ''}</span>
         </div>
 
         {cargando && (
@@ -176,8 +271,8 @@ export default function UsuariosPage() {
               <tr className="border-b border-gray-100 text-left">
                 <th className="px-6 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Email</th>
                 <th className="px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Rol</th>
-                <th className="px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Último acceso</th>
-                <th className="px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Desde</th>
+                <th className="px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Último acceso</th>
+                <th className="px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Creado</th>
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
@@ -187,7 +282,9 @@ export default function UsuariosPage() {
                   <td className="px-6 py-4">
                     <div className="font-medium text-gray-900">{u.email}</div>
                     {u.invited && (
-                      <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5">Pendiente de aceptar</span>
+                      <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 mt-0.5 inline-block">
+                        Pendiente de aceptar
+                      </span>
                     )}
                   </td>
                   <td className="px-4 py-4">
@@ -202,8 +299,8 @@ export default function UsuariosPage() {
                       ))}
                     </select>
                   </td>
-                  <td className="px-4 py-4 text-gray-500 text-xs">{formatFecha(u.last_sign_in_at)}</td>
-                  <td className="px-4 py-4 text-gray-500 text-xs">{formatFecha(u.created_at)}</td>
+                  <td className="px-4 py-4 text-gray-500 text-xs hidden sm:table-cell">{formatFecha(u.last_sign_in_at)}</td>
+                  <td className="px-4 py-4 text-gray-500 text-xs hidden sm:table-cell">{formatFecha(u.created_at)}</td>
                   <td className="px-4 py-4 text-right">
                     <button
                       onClick={() => eliminar(u.id, u.email ?? '')}
