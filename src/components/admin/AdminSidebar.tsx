@@ -35,6 +35,7 @@ const NAV: { section: string; items: NavItem[] }[] = [
     section: 'Administración',
     items: [
       { href: '/admin/usuarios', label: 'Usuarios', icon: '👥', exact: false },
+      { href: '/admin/integraciones', label: 'Integraciones', icon: '🔌', exact: false },
     ],
   },
   {
