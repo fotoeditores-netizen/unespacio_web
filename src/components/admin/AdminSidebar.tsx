@@ -32,6 +32,12 @@ const NAV: { section: string; items: NavItem[] }[] = [
     ],
   },
   {
+    section: 'Administración',
+    items: [
+      { href: '/admin/usuarios', label: 'Usuarios', icon: '👥', exact: false },
+    ],
+  },
+  {
     section: 'Sitio',
     items: [
       { href: '/', label: 'Ver sitio público', icon: '↗', exact: false, external: true },
